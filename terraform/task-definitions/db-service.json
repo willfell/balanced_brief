@@ -1,0 +1,57 @@
+[
+    {
+        "runtimePlatform": {
+            "cpuArchitecture": "ARM64",
+            "operatingSystemFamily": "LINUX"
+        },    
+        "name": "${NAME}",
+        "image": "${IMAGE}",
+        "portMappings": [
+            {
+                "containerPort": 5432,
+                "hostPort": 5432,
+                "protocol": "tcp"
+            }
+        ],
+        "essential": true,
+        "entryPoint": ["/bin/sh", "-c", "/usr/local/bin/python3 /app/article_scraping/scraping.py && /usr/local/bin/python3 /app/newsletter/create_email_template.py"],
+        "environment": [
+            {
+                "name": "REDDITCLIENTID",
+                "value": "${REDDITCLIENTID}"
+            },
+            {
+                "name": "REDDITCLIENTSECRET",
+                "value": "${REDDITCLIENTSECRET}"
+            },
+            {
+                "name": "REDDITAGENT",
+                "value": "${REDDITAGENT}"
+            },
+            {
+                "name": "OPENAI_KEY",
+                "value": "${OPENAI_KEY}"
+            },
+            {
+                "name": "DB_PASS",
+                "value": "${DB_PASS}"
+            },
+            {
+                "name": "DB_HOST",
+                "value": "${DB_HOST}"
+            }
+        ],
+        "mountPoints": [],
+        "ReadonlyRootFilesystem": false,
+        "privileged": false,
+        "InitProcessEnabled": true,
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "${LOGGROUP}",
+                "awslogs-region": "${REGION}",
+                "awslogs-stream-prefix": "${LOGPREFIX}"
+            }
+        }
+    }
+]

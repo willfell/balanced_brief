@@ -1,0 +1,8 @@
+openai
+psycopg2-binary
+bs4
+newspaper3k
+datetime
+praw
+premailer
+boto3

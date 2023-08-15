@@ -1,0 +1,26 @@
+version: "3"
+
+services:      
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: ${DB_PASS}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+#Docker Networks
+networks:
+  postgres:
+    driver: bridge
+
+#Volumes
+volumes:
+    postgres:
