@@ -45,7 +45,6 @@ with open('newsletter/html/email-template.css', 'r') as f:
 html_with_css = f"<style>{css_content}</style>" + html_content
 
 # Inline the CSS
-#inlined_html = transform(html_with_css)
 base_path = os.path.abspath('html/')
 inlined_html = transform(html_with_css, base_url=f'file://{base_path}/')
 
@@ -55,6 +54,7 @@ msg.attach(MIMEText(inlined_html, 'html'))
 
 # Send the email
 for user in email_list:
+    print(f"Sending email to {user}")
     response = client.send_raw_email(
         Source=msg['From'],
         Destinations=[user],

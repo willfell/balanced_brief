@@ -109,14 +109,15 @@ resource "aws_iam_role" "scheduled_task_cloudwatch" {
 }
 
 resource "aws_iam_role_policy" "scheduled_task_cloudwatch" {
-  role   = aws_iam_role.scheduled_task_cloudwatch.name
+  role = aws_iam_role.scheduled_task_cloudwatch.name
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
         Action = [
           "ecs:*",
-          "ec2:*"
+          "ec2:*",
+          "iam:PassRole"
         ],
         Effect   = "Allow",
         Resource = "*"
