@@ -52,7 +52,7 @@ resource "aws_ecs_service" "main" {
 
 resource "aws_cloudwatch_event_rule" "scheduled_task" {
   name                = "scheduled-ecs-event-rule"
-  schedule_expression = "cron(44 8 * * ? *)"
+  schedule_expression = "cron(0 13 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "scheduled_task" {
