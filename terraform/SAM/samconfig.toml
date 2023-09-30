@@ -1,0 +1,16 @@
+version = 0.1
+[default]
+
+[default.build.parameters]
+use_container = true
+manifest = "app/requirements.txt"
+
+[default.deploy.parameters]
+manifest = "app/requirements.txt"
+stack_name = "db-schedule"
+s3_bucket = "balanced-brief-terraform-state"
+s3_prefix = "db-schedule"
+region = "us-west-1"
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"
+image_repositories = []

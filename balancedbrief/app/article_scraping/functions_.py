@@ -31,7 +31,7 @@ def proomptThatShit(scraped_article):
 
 
     print(f"Length of article before trimming = {len(scraped_article)}")
-    max_length = 5800
+    max_length = 5600
     if len(scraped_article) >= max_length:
         print("Trimming content")
         scraped_article = scraped_article[:max_length].rsplit(' ', 1)[0]

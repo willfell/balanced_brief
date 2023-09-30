@@ -10,6 +10,12 @@ import boto3
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from premailer import transform
+import logging
+# Disable all logging for 'premailer'
+logging.getLogger('premailer').setLevel(logging.CRITICAL)
+
+
+current_date = datetime.today().strftime('%Y-%m-%d')
 
 
 # Obtain the list of users
@@ -22,17 +28,15 @@ email_templates = create_email_templates(email_list)
 
 email_list = retrieve_email_list()
 
-# Your AWS credentials
-region = 'us-west-1'  # e.g., 'us-west-2'
+region = 'us-west-1'  
 
 # Initialize SES client
 client = boto3.client('ses', region_name=region)
 
 # Create a MIME formatted message
 msg = MIMEMultipart()
-#msg['From'] = 'willfellhoelter@gmail.com'
 msg['From'] = 'TheBalancedBrief@balancedbrief.com'
-msg['Subject'] = 'The Balanced Brief'
+msg['Subject'] = f"The Balanced Brief - {current_date}"
 
 # Read the HTML and CSS files
 with open('newsletter/html/will_fell.html', 'r') as f:
@@ -46,6 +50,7 @@ html_with_css = f"<style>{css_content}</style>" + html_content
 
 # Inline the CSS
 base_path = os.path.abspath('html/')
+print("Starting Transform")
 inlined_html = transform(html_with_css, base_url=f'file://{base_path}/')
 
 
@@ -54,13 +59,19 @@ msg.attach(MIMEText(inlined_html, 'html'))
 
 # Send the email
 for user in email_list:
-    print(f"Sending email to {user}")
-    response = client.send_raw_email(
-        Source=msg['From'],
-        Destinations=[user],
-        RawMessage={
-            'Data': msg.as_string()
-        }
-    )
+    try:
+        print(f"Attempting to send email to {user}...")
+        response = client.send_raw_email(
+            Source=msg['From'],
+            Destinations=[user],
+            RawMessage={
+                'Data': msg.as_string()
+            }
+        )
 
-    print(response)
+        # If the call to send_raw_email is successful, log the response
+        print(f"Successfully sent email to {user}. Response: {response}")
+
+    except Exception as e:
+        # In case of any error, log the exception details
+        print(f"Failed to send email to {user}. Error: {str(e)}")

@@ -45,10 +45,10 @@ def obtain_user_list():
 def obtain_posts():
 
     today_datetime_utc = datetime.utcnow()
-    yesterday_datetime_utc = today_datetime_utc - timedelta(days=1)
+    two_hours_ago = today_datetime_utc - timedelta(hours=2)
 
     cur.execute(f"SELECT * FROM successful_posts WHERE time between %s AND %s;",
-                (yesterday_datetime_utc, today_datetime_utc))
+                (two_hours_ago, today_datetime_utc))
     results = cur.fetchall()
 
     posts_of_the_day = {}
