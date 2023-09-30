@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+
+  This function stops and starts the DB EC2 instance for the window of the day that it's needed
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 30
+    Environment:
+      Variables:
+        INSTANCEID: !Ref INSTANCEID
+Parameters:
+  INSTANCEID: 
+    Type: String
+    Default: "i-0e028110e871745fe"
+
+
+Resources:
+    # Lambda Function
+  StartBastionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: app/
+      Handler: app.start_instance
+      Runtime: python3.9
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ec2:StartInstances
+              Resource: 
+                Fn::Sub: arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/${INSTANCEID}
+      Events:
+        DailyTrigger:
+          Type: Schedule
+          Properties:
+            Schedule: cron(50 11 * * ? *)
+
+
+  StopBastionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: app/
+      Handler: app.stop_instance
+      Runtime: python3.9
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ec2:StopInstances
+              Resource: 
+                Fn::Sub: arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/${INSTANCEID}
+      Events:
+        DailyTrigger:
+          Type: Schedule
+          Properties:
+            Schedule: cron(25 12 * * ? *)
+
