@@ -11,23 +11,21 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from premailer import transform
 import logging
-# Disable all logging for 'premailer'
-logging.getLogger('premailer').setLevel(logging.CRITICAL)
+from functools import wraps
+import sys
+import cssutils
 
 
 current_date = datetime.today().strftime('%Y-%m-%d')
+log = logging.getLogger()  # Assuming you want to get the root logger
 
 
 # Obtain the list of users
 user_list = obtain_user_list()
 post_list = obtain_posts()
-
 email_list = determine_email_templates(user_list, post_list)
-
 email_templates = create_email_templates(email_list)
-
 email_list = retrieve_email_list()
-
 region = 'us-west-1'  
 
 # Initialize SES client
@@ -48,11 +46,11 @@ with open('newsletter/html/email-template.css', 'r') as f:
 # Combine the HTML and CSS
 html_with_css = f"<style>{css_content}</style>" + html_content
 
+
 # Inline the CSS
 base_path = os.path.abspath('html/')
-print("Starting Transform")
+cssutils.log.setLevel(logging.CRITICAL)
 inlined_html = transform(html_with_css, base_url=f'file://{base_path}/')
-
 
 # Attach the processed HTML with inlined CSS to the email
 msg.attach(MIMEText(inlined_html, 'html'))
