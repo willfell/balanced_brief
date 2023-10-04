@@ -17,8 +17,8 @@ COPY . .
 # ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/python3 /app/article_scraping/scraping.py"]
 
 # For Email Testing
-# ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/python3 /app/newsletter/create_email_template.py"]
+ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/python3 /app/newsletter/create_email_template.py"]
 
 # Complete Process
-ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/python3 /app/article_scraping/scraping.py && /usr/local/bin/python3 /app/newsletter/create_email_template.py"]
+# ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/python3 /app/article_scraping/scraping.py && /usr/local/bin/python3 /app/newsletter/create_email_template.py"]
 

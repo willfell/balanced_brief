@@ -45,7 +45,7 @@ def obtain_user_list():
 def obtain_posts():
 
     today_datetime_utc = datetime.utcnow()
-    two_hours_ago = today_datetime_utc - timedelta(hours=2)
+    two_hours_ago = today_datetime_utc - timedelta(hours=5)
 
     cur.execute(f"SELECT * FROM successful_posts WHERE time between %s AND %s;",
                 (two_hours_ago, today_datetime_utc))
@@ -68,6 +68,7 @@ def obtain_posts():
         post_data['reddit_posts_id'] = post[11]
         post_data['post_id'] = post[12]
         post_data['post_category'] = post[13]
+        post_data['post_parent_category'] = post[14]
         posts_of_the_day['posts'].append(post_data)
 
     return posts_of_the_day
@@ -90,37 +91,15 @@ def determine_email_templates(user_list, post_list):
         print(f"Post Search | User {user['user_email']}")
         user_posts = []
         for post in post_list['posts']:
-            post_meta_data = {}
             if post['post_category'] in user['user_interests']:
-                print(
-                    f"User = {user['user_email']} | Post Category = {post['post_category']} | Post ID = {post['post_id']}")
+                #print(
+                #    f"User = {user['user_email']} | Post Category = {post['post_category']} | Post ID = {post['post_id']}")
                 user_story_list['user_posts'].append(post)
 
         email_list['user_stories'].append(user_story_list)
     print("=================")
     return email_list
 
-
-# def format_article(article_data):
-#     return f'''
-# <div class="article">
-#   <div class="article-topic">
-#     <h4>{article_data['post_category'].upper()}</h4>
-#   </div>
-#       <div class="article-title">
-#       <h2>{article_data['post_title_summary']}</h2>
-#       </div>
-#     <div class="article-image">
-#       <a href="{article_data['post_url']}">
-#       <img src="{article_data['post_image_url']}" class="img-fluid">
-#       </a>
-#     </div>
-#     <div class="article-summary">
-#       <p>{article_data['post_summary']}</p>
-#     </div>
-# </div>
-# <hr>
-#     '''
 
 def format_article(article_data):
     return f'''
@@ -143,25 +122,46 @@ def format_article(article_data):
 <hr>
     '''
 
+def format_article_parent_article(parent_category):
+    return f'''
+<div class="parent_category">
+  <div class="category">
+    <h3>{parent_category}</h3>
+  </div>
+</div>
+<hr>
+    '''
 
 
-def generate_newsletter(articles, filename):
+def generate_newsletter(articles, filename, category_order_mapping):
     with open("newsletter/html/index.html", "r") as file:
         html_template = file.read()
 
     soup = BeautifulSoup(html_template, "html.parser")
-    content_div = soup.find("div", class_="leadoff")
 
-    for article in articles:
-        formatted_article = format_article(article)
-        content_div.insert_after(BeautifulSoup(
-            formatted_article, "html.parser"))
+    # Start by finding the leadoff div which is the starting point for insertions
+    insert_point = soup.find("div", class_="leadoff")
+
+    for order, parent_category in sorted(category_order_mapping.items(), key=lambda x: int(x[0])):
+        # Insert parent category
+        formatted_article = format_article_parent_article(parent_category)
+        parent_soup = BeautifulSoup(formatted_article, "html.parser").div
+        insert_point.insert_after(parent_soup)
+        insert_point = parent_soup
+
+        # Insert articles for the parent category
+        for article in articles:
+            if article['post_parent_category'] == parent_category:
+                formatted_article = format_article(article)
+                article_soup = BeautifulSoup(formatted_article, "html.parser").div
+                insert_point.insert_after(article_soup)
+                insert_point = article_soup
+
 
     with open(filename, "w") as output_file:
         output_file.write(str(soup))
 
-
-def create_email_templates(email_list):
+def create_email_templates(email_list, category_order_mapping):
 
     for stories in email_list['user_stories']:
         print("=================")
@@ -169,7 +169,7 @@ def create_email_templates(email_list):
         filename = f"newsletter/{html_dir}/{stories['user_first_name'].lower()}_{stories['user_last_name'].lower()}.html"
 
         # Generate the newsletter as that function iterates through the list anyways
-        generate_newsletter(stories['user_posts'], filename)
+        generate_newsletter(stories['user_posts'], filename, category_order_mapping)
 
 def retrieve_email_list():
     query = "SELECT email FROM public.user_send_list;"
@@ -182,3 +182,14 @@ def retrieve_email_list():
     emails = [row[0] for row in rows]
 
     return(emails)  # This will print the list of emails
+
+
+def determine_category_order():
+    query = "SELECT parent_category, category_order FROM public.parent_category_hierarchy;"
+    cur.execute(query)
+
+    # Fetch rows
+    rows = cur.fetchall()
+    category_order_mapping = {order: category for category, order in rows}
+    
+    return category_order_mapping

@@ -17,14 +17,15 @@ import cssutils
 
 
 current_date = datetime.today().strftime('%Y-%m-%d')
-log = logging.getLogger()  # Assuming you want to get the root logger
+log = logging.getLogger()  
 
 
 # Obtain the list of users
 user_list = obtain_user_list()
 post_list = obtain_posts()
 email_list = determine_email_templates(user_list, post_list)
-email_templates = create_email_templates(email_list)
+category_order_mapping = determine_category_order()
+email_templates = create_email_templates(email_list, category_order_mapping)
 email_list = retrieve_email_list()
 region = 'us-west-1'  
 
