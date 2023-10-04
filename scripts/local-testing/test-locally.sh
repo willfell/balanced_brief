@@ -6,11 +6,11 @@ set -e
 # Set the container name variable
 CONTAINER_NAME=bb_test
 
-cd ../balancedbrief/app
+cd ../../balancedbrief/app
 
 docker build -t $CONTAINER_NAME .
 
-docker run --network=scripts_postgres \
+docker run --network=local-testing_postgres \
            -e REDDITAGENT="$REDDITAGENT" \
            -e REDDITCLIENTSECRET="$REDDITCLIENTSECRET" \
            -e REDDITCLIENTID="$REDDITCLIENTID" \

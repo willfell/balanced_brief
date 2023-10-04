@@ -123,6 +123,12 @@ def get_category(subreddit):
     category = results[0][0]
     return category
 
+def get_parent_category(subreddit):
+    cur.execute(
+        f"SELECT parent_category from subreddits where subreddit_name = '{subreddit}';")
+    results = cur.fetchall()
+    parent_category = results[0][0]
+    return parent_category
 
 
 def determine_subreddits():
@@ -187,6 +193,7 @@ def submit_successful_post_to_db(post):
         post['post_title_summary'],
         post['post_image_url'],
         post['post_category'],
+        post['post_parent_category'],
         post['article_title'],
         post['article_authors'],
         post['article_publish_date'],
@@ -209,13 +216,14 @@ def submit_successful_post_to_db(post):
             post_title_summary,
             post_image_url,
             post_category,
+            post_parent_category,
             article_title,
             article_authors,
             article_publish_date,
             article_source_url
         )
         VALUES (
-            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
         )
     """
 
@@ -227,7 +235,7 @@ def submit_successful_post_to_db(post):
     return True
 
 
-def submit_reddit_post_to_db(post, subreddit, post_type, category):
+def submit_reddit_post_to_db(post, subreddit, post_type, category, parent_category):
 
     post_title = post.title
     post_title = post_title.encode('windows-1252', errors='ignore').decode('utf-8', errors='ignore')
@@ -240,6 +248,7 @@ def submit_reddit_post_to_db(post, subreddit, post_type, category):
         "post_url": post.url,
         "post_type": post_type,
         "post_category": category,
+        "post_parent_category": parent_category,
         "post_id": post.id
     }
 
@@ -251,6 +260,7 @@ def submit_reddit_post_to_db(post, subreddit, post_type, category):
         json_data['post_url'],
         json_data['post_type'],
         json_data['post_category'],
+        json_data['post_parent_category'],
         json_data['post_id']
     )
 
@@ -264,10 +274,11 @@ def submit_reddit_post_to_db(post, subreddit, post_type, category):
             post_url,
             post_type,
             post_category,
+            post_parent_category,
             post_id
         )
         VALUES (
-            %s, %s, %s, %s, %s, %s, %s, %s
+            %s, %s, %s, %s, %s, %s, %s, %s, %s
         )
         RETURNING id
     """
@@ -278,16 +289,10 @@ def submit_reddit_post_to_db(post, subreddit, post_type, category):
 
     return True
 
-    # Close the cursor and connection
-    # cur.close()
-    # conn.close()
-
 
 def is_it_scrapable(url, subreddit):
 
     min_article_length = 400
-
-
     article = Article(url)
     try:
         article.download()
@@ -295,7 +300,7 @@ def is_it_scrapable(url, subreddit):
         html = article.html
         soup = BeautifulSoup(html, 'html.parser')
 
-        if article.clean_top_node:
+        if article.clean_top_node is not None:
             main_content_element = soup.find(
                 article.clean_top_node.tag, class_=article.clean_top_node.get('class'))
             
@@ -390,8 +395,8 @@ def gather_articles_to_scrape():
         article_data['post_url'] = article[6]
         article_data['post_type'] = article[7]
         article_data['post_category'] = article[8]
+        article_data['post_parent_category'] = article[9]
         articles_to_scrape['reddit_posts'].append(article_data)
 
     return articles_to_scrape
 
-    # print(results)

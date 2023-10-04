@@ -34,6 +34,7 @@ def gather_articles():
         top_post = subreddit.top(time_filter="day", limit=60)
 
         for post in top_post:
+            # Filter out bad posts
             if 'jpg' in post.url:
                 print(
                     f"Post URL appears to be a url with an image in it {post.url}, skipping")
@@ -56,9 +57,10 @@ def gather_articles():
                 continue
 
             category = get_category(subreddit)
+            parent_category = get_parent_category(subreddit)
 
             reddit_post_id = submit_reddit_post_to_db(
-                post, subreddit_name, post_type, category)
+                post, subreddit_name, post_type, category, parent_category)
 
             print(f"Successfuly obtained story of the day for {subreddit}")
             print("===================================")
@@ -88,13 +90,9 @@ def scrape(post):
     if use_gpt:
         scraped_content['post_summary'] = proomptThatShit(scraped_content['post_content'])
         scraped_content['post_title_summary'] = proompt_summary_to_title(scraped_content['article_title'])
-        # scraped_content['post_title_summary'] = scraped_content['article_title']
     else:
         scraped_content['post_summary'] = "summarized article here"
         scraped_content['post_title_summary'] = scraped_content['article_title']
-        # scraped_content['post_title_summary'] = proompt_summary_to_title(scraped_content['article_title'])
-
-        # scraped_content['post_title_summary'] = scraped_content['post_title']
 
     # Submit the summary and all other data to the db
     submit_post_to_db = submit_successful_post_to_db(scraped_content)

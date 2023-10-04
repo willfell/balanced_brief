@@ -3,11 +3,13 @@ import os
 import subprocess
 
 def download_and_execute_file(bucket_name, key, download_path):
-    # Initialize the S3 client
-    s3 = boto3.client('s3')
+    # If the file does not exist locally, download it
+    if not os.path.exists(download_path):
+        # Initialize the S3 client
+        s3 = boto3.client('s3')
 
-    # Download the file from S3
-    s3.download_file(bucket_name, key, download_path)
+        # Download the file from S3
+        s3.download_file(bucket_name, key, download_path)
 
     # Execute the file
     subprocess.run(["/opt/homebrew/bin/python3", download_path])
