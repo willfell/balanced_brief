@@ -41,8 +41,8 @@ locals {
 resource "docker_image" "image" {
   name = format("%v:%v", aws_ecr_repository.repo.repository_url, local.timestamp)
   build {
-    context    = "${path.cwd}/../balancedbrief/app/"
-    dockerfile = "Dockerfile"
+    context    = "${path.cwd}/.."
+    dockerfile = "balancedbrief/app/Dockerfile"
     platform   = "linux/arm64"
   }
   lifecycle {

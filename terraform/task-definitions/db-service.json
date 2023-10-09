@@ -14,7 +14,7 @@
             }
         ],
         "essential": true,
-        "entryPoint": ["/bin/sh", "-c", "/usr/local/bin/python3 /app/article_scraping/scraping.py && /usr/local/bin/python3 /app/newsletter/create_email_template.py"],
+        "entryPoint": ["sh", "init.sh"],
         "environment": [
             {
                 "name": "REDDITCLIENTID",
@@ -39,6 +39,10 @@
             {
                 "name": "DB_HOST",
                 "value": "${DB_HOST}"
+            },
+            {
+                "name": "ENV",
+                "value": "${ENV}"
             }
         ],
         "mountPoints": [],

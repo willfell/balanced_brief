@@ -22,3 +22,7 @@ variable "instance_ami" {
 variable "ssh_key_name" {
   default = "will_fell_mac_book"
 }
+
+variable "env" {
+  default = "PROD"
+}

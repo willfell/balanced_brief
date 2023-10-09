@@ -4,9 +4,19 @@ import json
 from newspaper import Article
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from premailer import transform
+import cssutils
+import boto3
+import logging
+
+log = logging.getLogger()  
 
 html_dir = 'html'
 
+region = 'us-west-1'  
+client = boto3.client('ses', region_name=region)
 
 # set up connection parameters
 db_pass = os.environ['DB_PASS']
@@ -25,7 +35,7 @@ cur = conn.cursor()
 
 
 def obtain_user_list():
-    cur.execute("SELECT * FROM users;")
+    cur.execute("SELECT id, email, first_name, last_name, interests FROM users;")
     results = cur.fetchall()
     users = {}
     users['list'] = []
@@ -36,7 +46,6 @@ def obtain_user_list():
         user_data['user_first_name'] = user[2]
         user_data['user_last_name'] = user[3]
         user_data['user_interests'] = user[4]
-        user_data['user_age'] = user[5]
         users['list'].append(user_data)
 
     return users
@@ -133,7 +142,8 @@ def format_article_parent_article(parent_category):
     '''
 
 
-def generate_newsletter(articles, filename, category_order_mapping):
+def generate_newsletter(article_list, category_order_mapping, user, current_date):
+    filename = f"newsletter/html/{user['user_first_name'].lower()}_{user['user_last_name'].lower()}_{current_date}.html"
     with open("newsletter/html/index.html", "r") as file:
         html_template = file.read()
 
@@ -150,39 +160,19 @@ def generate_newsletter(articles, filename, category_order_mapping):
         insert_point = parent_soup
 
         # Insert articles for the parent category
-        for article in articles:
-            if article['post_parent_category'] == parent_category:
-                formatted_article = format_article(article)
-                article_soup = BeautifulSoup(formatted_article, "html.parser").div
-                insert_point.insert_after(article_soup)
-                insert_point = article_soup
+        for article in article_list['posts']:
+            if article['post_category'] in user['user_interests']:
+                if article['post_parent_category'] == parent_category:
+                    formatted_article = format_article(article)
+                    article_soup = BeautifulSoup(formatted_article, "html.parser").div
+                    insert_point.insert_after(article_soup)
+                    insert_point = article_soup
 
 
     with open(filename, "w") as output_file:
         output_file.write(str(soup))
 
-def create_email_templates(email_list, category_order_mapping):
-
-    for stories in email_list['user_stories']:
-        print("=================")
-        print(f"Creating email template for {stories['user_email']}")
-        filename = f"newsletter/{html_dir}/{stories['user_first_name'].lower()}_{stories['user_last_name'].lower()}.html"
-
-        # Generate the newsletter as that function iterates through the list anyways
-        generate_newsletter(stories['user_posts'], filename, category_order_mapping)
-
-def retrieve_email_list():
-    query = "SELECT email FROM public.user_send_list;"
-    cur.execute(query)
-
-    # Fetch all rows from the result
-    rows = cur.fetchall()
-
-    # Convert the rows into a list of emails
-    emails = [row[0] for row in rows]
-
-    return(emails)  # This will print the list of emails
-
+    return filename
 
 def determine_category_order():
     query = "SELECT parent_category, category_order FROM public.parent_category_hierarchy;"
@@ -193,3 +183,111 @@ def determine_category_order():
     category_order_mapping = {order: category for category, order in rows}
     
     return category_order_mapping
+
+def create_and_send_email(user_newsletter, user, current_date):
+    msg = MIMEMultipart()
+    msg['From'] = 'TheBalancedBrief@balancedbrief.com'
+    msg['Subject'] = f"The Balanced Brief - {current_date}"
+    msg['To'] = user['user_email']
+
+# Read the HTML and CSS files
+    with open(user_newsletter, 'r') as f:
+        html_content = f.read()
+
+    with open('newsletter/html/email-template.css', 'r') as f:
+        css_content = f.read()
+
+    # Combine the HTML and CSS
+    html_with_css = f"<style>{css_content}</style>" + html_content
+
+
+    # Inline the CSS
+    base_path = os.path.abspath('html/')
+    cssutils.log.setLevel(logging.CRITICAL)
+    inlined_html = transform(html_with_css, base_url=f'file://{base_path}/')
+
+    # Attach the processed HTML with inlined CSS to the email
+    msg.attach(MIMEText(inlined_html, 'html'))
+    response = None
+    # Send the email
+    try:
+        print(f"Attempting to send email to {user['user_email']}")
+        response = client.send_raw_email(
+            Source=msg['From'],
+            Destinations=[user['user_email']],
+            RawMessage={
+                'Data': msg.as_string()
+            }
+        )
+        current_date_time = datetime.utcnow().isoformat()
+        log_successful_email = sucessful_email(user, current_date_time)
+        return log_successful_email
+
+    except Exception as e:
+        current_date_time = datetime.utcnow().isoformat()
+
+        # Conditionally get the MessageId if response exists
+        message_id = response['MessageId'] if response else None
+
+        log_unsuccessful_email = unsucessful_email(user, current_date_time, str(e))
+        return log_unsuccessful_email
+
+def sucessful_email(user, current_date_time):
+    print(f"{user['user_email']} - Email Successfully sent")
+    data_tuple = (
+        user['user_id'],
+        True,
+        current_date_time
+    )
+
+    # Define the INSERT statement
+    insert_query = """
+        INSERT INTO successful_email_sends (
+            user_id,
+            success,
+            timestamp
+        )
+        VALUES (
+            %s, %s, %s
+        )
+    """
+
+    try:
+        cur.execute(insert_query, data_tuple)
+        conn.commit()
+        return True
+
+    except Exception as e:
+        print(f"Failed to insert data for user {user['user_email']} on email SUCCESS. Error: {e}")
+        return False
+
+def unsucessful_email(user, current_date_time, failure_reason):
+    print(f"{user['user_email']} - Email NOT sent")
+    data_tuple = (
+        user['user_id'],
+        False,
+        failure_reason,
+        current_date_time
+    )
+
+    # Define the INSERT statement
+    insert_query = """
+        INSERT INTO unsuccessful_email_sends (
+            user_id,
+            success,
+            failure_reason,
+            timestamp
+        )
+        VALUES (
+            %s, %s, %s, %s
+        )
+    """
+
+    try:
+        cur.execute(insert_query, data_tuple)
+        conn.commit()
+        return True
+
+    except Exception as e:
+        print(f"Failed to insert data for user {user['user_email']} on email FAILURE. Error: {e}")
+        return False

@@ -308,18 +308,14 @@ def is_it_scrapable(url, subreddit):
             if main_content_element:
                 post_content = main_content_element.get_text(strip=True)
                 if len(post_content) < min_article_length:
-                    print(f"Length of article {url} is less then {min_article_length}, moving to next article")
                     return False
 
                 if post_content == "":
-                    print(f"Article {url} | subreddit {subreddit} | No success scraping - Empty Article")
+                    return False
                 
                 print(f"Article {url} | subreddit {subreddit} | Success scraping")
-
                 return True
             else:
-                print(
-                    f"Article {url} | subreddit {subreddit} | Failed to find main content element")
                 return False
         else:
             print(

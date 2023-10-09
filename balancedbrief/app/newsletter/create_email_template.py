@@ -7,70 +7,26 @@ import json
 from functions import *
 from datetime import datetime
 import boto3
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from premailer import transform
 import logging
 from functools import wraps
 import sys
 import cssutils
 
+current_date = datetime.utcnow().strftime('%Y-%m-%d')
 
-current_date = datetime.today().strftime('%Y-%m-%d')
+
 log = logging.getLogger()  
 
 
 # Obtain the list of users
 user_list = obtain_user_list()
 post_list = obtain_posts()
-email_list = determine_email_templates(user_list, post_list)
+# email_list = determine_email_templates(user_list, post_list)
 category_order_mapping = determine_category_order()
-email_templates = create_email_templates(email_list, category_order_mapping)
-email_list = retrieve_email_list()
-region = 'us-west-1'  
 
-# Initialize SES client
-client = boto3.client('ses', region_name=region)
-
-# Create a MIME formatted message
-msg = MIMEMultipart()
-msg['From'] = 'TheBalancedBrief@balancedbrief.com'
-msg['Subject'] = f"The Balanced Brief - {current_date}"
-
-# Read the HTML and CSS files
-with open('newsletter/html/will_fell.html', 'r') as f:
-    html_content = f.read()
-
-with open('newsletter/html/email-template.css', 'r') as f:
-    css_content = f.read()
-
-# Combine the HTML and CSS
-html_with_css = f"<style>{css_content}</style>" + html_content
-
-
-# Inline the CSS
-base_path = os.path.abspath('html/')
-cssutils.log.setLevel(logging.CRITICAL)
-inlined_html = transform(html_with_css, base_url=f'file://{base_path}/')
-
-# Attach the processed HTML with inlined CSS to the email
-msg.attach(MIMEText(inlined_html, 'html'))
-
-# Send the email
-for user in email_list:
-    try:
-        print(f"Attempting to send email to {user}...")
-        response = client.send_raw_email(
-            Source=msg['From'],
-            Destinations=[user],
-            RawMessage={
-                'Data': msg.as_string()
-            }
-        )
-
-        # If the call to send_raw_email is successful, log the response
-        print(f"Successfully sent email to {user}. Response: {response}")
-
-    except Exception as e:
-        # In case of any error, log the exception details
-        print(f"Failed to send email to {user}. Error: {str(e)}")
+for user in user_list['list']:
+    print("====================================================================")
+    print(f"Creating email template for user {user['user_email']}")
+    print("====================================================================")
+    user_newsletter = generate_newsletter(post_list, category_order_mapping, user, current_date)
+    create_and_send_email(user_newsletter, user, current_date)
