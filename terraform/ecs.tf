@@ -18,6 +18,7 @@ resource "aws_ecs_task_definition" "task_def" {
     LOGGROUP           = aws_cloudwatch_log_group.logs.name
     LOGPREFIX          = var.project_short_name
     REGION             = data.aws_region.current.name
+    ENV                = var.env
   })
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
