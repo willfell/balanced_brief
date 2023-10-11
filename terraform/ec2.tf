@@ -137,7 +137,6 @@ resource "aws_instance" "bastion" {
   key_name                    = var.ssh_key_name
   subnet_id                   = aws_subnet.public_subnet.id
   associate_public_ip_address = true
-  #security_groups = aws_security_group.allow_ssh.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
   root_block_device {
     delete_on_termination = true
@@ -147,7 +146,7 @@ resource "aws_instance" "bastion" {
   }
   tags = merge(var.tags, { Name = "${var.project_short_name}-bastion" })
   user_data = templatefile("${path.cwd}/templates/bastion-startup.sh", {
-    SSH_KEY = data.aws_secretsmanager_secret_version.ssh_key.secret_string
+    SSH_KEY       = data.aws_secretsmanager_secret_version.ssh_key.secret_string
     LOCAL_SSH_KEY = data.aws_secretsmanager_secret_version.local_ssh_key.secret_string
   })
 
