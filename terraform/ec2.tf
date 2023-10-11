@@ -137,7 +137,7 @@ resource "aws_instance" "bastion" {
   key_name                    = var.ssh_key_name
   subnet_id                   = aws_subnet.public_subnet.id
   associate_public_ip_address = true
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  vpc_security_group_ids      = [aws_security_group.allow_ssh.id]
   root_block_device {
     delete_on_termination = true
     encrypted             = false
