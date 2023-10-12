@@ -63,6 +63,13 @@ if os.environ['ENV'] == "PROD":
         "last_name": "Carmie",
         "interests": ['AI', 'General News', 'World News', 'Uplifting News', 'Oddly Interesting News', 'Technology', 'Gaming', 'PC Gaming', 'Programming', 'Android', 'Apple', 'Economics', 'Finance', 'Conspiracy', 'Conservative News', 'Liberal News', 'Science', 'Sports', 'NFL', 'Soccer', 'Hockey', 'NBA', 'Movies', 'Television', 'Environment'],
         "age": 26
+    },
+    {
+        "email": "Hollyhox849@yahoo.com",
+        "first_name": "Holly",
+        "last_name": "Hox",
+        "interests": ['AI', 'General News', 'World News', 'Uplifting News', 'Oddly Interesting News', 'Technology', 'Gaming', 'PC Gaming', 'Programming', 'Android', 'Apple', 'Economics', 'Finance', 'Conspiracy', 'Conservative News', 'Liberal News', 'Science', 'Sports', 'NFL', 'Soccer', 'Hockey', 'NBA', 'Movies', 'Television', 'Environment'],
+        "age": 26
     }
     ]
 else:
