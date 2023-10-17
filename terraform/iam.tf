@@ -67,29 +67,37 @@ resource "aws_iam_role_policy_attachment" "app_task_role" {
 resource "aws_iam_policy" "task_role_policy" {
   description = "Policy for Role linked to API Task Definition"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "ses:SendEmail",
-        "ses:SendTemplatedEmail",
-        "ses:SendCustomVerificationEmail",
-        "ses:SendRawEmail",
-        "ses:SendBulkTemplatedEmail",
-        "ses:SendBounce",
-        "ses:VerifyDomainDkim",
-        "ses:VerifyEmailIdentity",
-        "ses:VerifyDomainIdentity",
-        "ses:GetIdentityVerificationAttributes"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "ses:SendEmail",
+          "ses:SendTemplatedEmail",
+          "ses:SendCustomVerificationEmail",
+          "ses:SendRawEmail",
+          "ses:SendBulkTemplatedEmail",
+          "ses:SendBounce",
+          "ses:VerifyDomainDkim",
+          "ses:VerifyEmailIdentity",
+          "ses:VerifyDomainIdentity",
+          "ses:GetIdentityVerificationAttributes"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
+      },
+      {
+        Action = [
+          "ec2:StartInstances",
+          "ec2:StopInstances",
+          "ec2:DescribeInstances",
+          "ec2:DescribeInstanceStatus"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role" "scheduled_task_cloudwatch" {

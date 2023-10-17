@@ -19,6 +19,7 @@ resource "aws_ecs_task_definition" "task_def" {
     LOGPREFIX          = var.project_short_name
     REGION             = data.aws_region.current.name
     ENV                = var.env
+    EXECUTION_LOCATION = "CLOUD"
   })
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"

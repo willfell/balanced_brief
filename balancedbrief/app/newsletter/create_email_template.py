@@ -14,7 +14,6 @@ import cssutils
 
 current_date = datetime.utcnow().strftime('%Y-%m-%d')
 
-
 log = logging.getLogger()  
 
 

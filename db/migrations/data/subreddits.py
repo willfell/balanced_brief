@@ -37,13 +37,13 @@ if os.environ['ENV'] == "PROD":
             "subreddit_parent_category": "Finance"
         },
         {
-            "subreddit_name": "news",
-            "subreddit_category": "General News",
+            "subreddit_name": "worldnews",
+            "subreddit_category": "World News",
             "subreddit_parent_category": "News"
         },
         {
-            "subreddit_name": "worldnews",
-            "subreddit_category": "World News",
+            "subreddit_name": "news",
+            "subreddit_category": "General News",
             "subreddit_parent_category": "News"
         },
         {

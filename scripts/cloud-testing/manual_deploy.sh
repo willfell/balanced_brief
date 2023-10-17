@@ -36,7 +36,16 @@ if [[ -n "$LATEST_TASK_DEFINITION" ]]; then
       --task-definition $FAMILY_PREFIX:$REVISION \
       --count $COUNT \
       --network-configuration "awsvpcConfiguration={subnets=[$SUBNETS],securityGroups=[$SECURITY_GROUPS],assignPublicIp=$ASSIGN_PUBLIC_IP}" \
-      --started-by $STARTED_BY
+      --started-by $STARTED_BY \
+      --overrides '{
+          "containerOverrides": [{
+              "name": "bf-task",
+              "environment": [{
+                  "name": "ENV",
+                  "value": "TEST"
+              }]
+          }]
+      }'
 
     if [[ $? -eq 0 ]]; then
         log "Successfully started ECS task with revision: $REVISION"

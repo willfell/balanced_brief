@@ -30,9 +30,10 @@ docker run --network=docker_postgres \
            -e REDDITCLIENTID="$REDDITCLIENTID" \
            -e OPENAI_KEY="$OPENAI_KEY" \
            -e DB_PASS="$DB_PASS" \
-           -e DB_HOST="$DB_HOST" \
+           -e DB_HOST="postgres" \
            -e AWS_ACCESS_KEY_ID="$BB_ACCESS_KEY_ID" \
            -e AWS_SECRET_ACCESS_KEY="$BB_ACCESS_SECRET_KEY" \
            -e AWS_REGION="$BB_AWS_REGION" \
            -e ENV="$ENV" \
+           -e EXECUTION_LOCATION="$EXECUTION_LOCATION" \
            $CONTAINER_NAME
