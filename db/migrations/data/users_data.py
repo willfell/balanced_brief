@@ -81,7 +81,7 @@ if os.environ['ENV'] == "PROD":
     {
         "email": "smcentennial@gmail.com",
         "first_name": "Sam",
-        "last_name": "Holton",
+        "last_name": "Miller",
         "interests": ['AI', 'General News', 'World News', 'Uplifting News', 'Oddly Interesting News', 'Technology', 'Gaming', 'PC Gaming', 'Programming', 'Android', 'Apple', 'Economics', 'Finance', 'Conspiracy', 'Conservative News', 'Liberal News', 'Science', 'Sports', 'NFL', 'Soccer', 'Hockey', 'NBA', 'Movies', 'Television', 'Environment'],
         "age": 26
     }
