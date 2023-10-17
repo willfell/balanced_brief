@@ -17,7 +17,6 @@ user_agent = os.environ['REDDITAGENT']
 testing = 'all'
 use_gpt = True
 
-
 def gather_articles():
 
     to_brief = {}

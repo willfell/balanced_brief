@@ -75,6 +75,11 @@ resource "aws_instance" "nat_instance" {
   #key_name                    = var.ssh_key_name 
   key_name               = "will_fell_work_laptop"
   vpc_security_group_ids = [aws_security_group.nat_sg.id]
+  root_block_device {
+    volume_type           = "gp3" # Use gp3 which might be cheaper than gp2
+    volume_size           = 8     # Size in GB. Adjust as needed but be cautious.
+    delete_on_termination = true  # Ensures the volume is deleted when the instance is terminated.
+  }
   user_data = base64encode(<<EOF
 #!/bin/bash
 sudo sysctl -w net.ipv4.ip_forward=1

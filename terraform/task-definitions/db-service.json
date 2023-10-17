@@ -43,6 +43,10 @@
             {
                 "name": "ENV",
                 "value": "${ENV}"
+            },
+            {
+                "name": "EXECUTION_LOCATION",
+                "value": "${EXECUTION_LOCATION}"
             }
         ],
         "mountPoints": [],

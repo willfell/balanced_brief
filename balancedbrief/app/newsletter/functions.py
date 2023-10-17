@@ -35,20 +35,27 @@ cur = conn.cursor()
 
 
 def obtain_user_list():
-    cur.execute("SELECT id, email, first_name, last_name, interests FROM users;")
+    # Filter users based on the environment
+    if os.environ['ENV'] == "TEST":
+        cur.execute("SELECT id, email, first_name, last_name, interests FROM users WHERE email LIKE 'willfellhoelter%';")
+    else:
+        cur.execute("SELECT id, email, first_name, last_name, interests FROM users;")
+    
     results = cur.fetchall()
-    users = {}
-    users['list'] = []
-    for user in results:
-        user_data = {}
-        user_data['user_id'] = user[0]
-        user_data['user_email'] = user[1]
-        user_data['user_first_name'] = user[2]
-        user_data['user_last_name'] = user[3]
-        user_data['user_interests'] = user[4]
-        users['list'].append(user_data)
+    
+    # Use dictionary comprehension to simplify user data creation
+    users_list = [
+        {
+            'user_id': user[0],
+            'user_email': user[1],
+            'user_first_name': user[2],
+            'user_last_name': user[3],
+            'user_interests': user[4]
+        }
+        for user in results
+    ]
 
-    return users
+    return {'list': users_list}
 
 
 def obtain_posts():
@@ -291,3 +298,4 @@ def unsucessful_email(user, current_date_time, failure_reason):
     except Exception as e:
         print(f"Failed to insert data for user {user['user_email']} on email FAILURE. Error: {e}")
         return False
+

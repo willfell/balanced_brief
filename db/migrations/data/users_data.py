@@ -70,6 +70,20 @@ if os.environ['ENV'] == "PROD":
         "last_name": "Hox",
         "interests": ['AI', 'General News', 'World News', 'Uplifting News', 'Oddly Interesting News', 'Technology', 'Gaming', 'PC Gaming', 'Programming', 'Android', 'Apple', 'Economics', 'Finance', 'Conspiracy', 'Conservative News', 'Liberal News', 'Science', 'Sports', 'NFL', 'Soccer', 'Hockey', 'NBA', 'Movies', 'Television', 'Environment'],
         "age": 26
+    },
+    {
+        "email": "holtonjake12@gmail.com",
+        "first_name": "Jake",
+        "last_name": "Holton",
+        "interests": ['AI', 'General News', 'World News', 'Uplifting News', 'Oddly Interesting News', 'Technology', 'Gaming', 'PC Gaming', 'Programming', 'Android', 'Apple', 'Economics', 'Finance', 'Conspiracy', 'Conservative News', 'Liberal News', 'Science', 'Sports', 'NFL', 'Soccer', 'Hockey', 'NBA', 'Movies', 'Television', 'Environment'],
+        "age": 26
+    },
+    {
+        "email": "smcentennial@gmail.com",
+        "first_name": "Sam",
+        "last_name": "Holton",
+        "interests": ['AI', 'General News', 'World News', 'Uplifting News', 'Oddly Interesting News', 'Technology', 'Gaming', 'PC Gaming', 'Programming', 'Android', 'Apple', 'Economics', 'Finance', 'Conspiracy', 'Conservative News', 'Liberal News', 'Science', 'Sports', 'NFL', 'Soccer', 'Hockey', 'NBA', 'Movies', 'Television', 'Environment'],
+        "age": 26
     }
     ]
 else:

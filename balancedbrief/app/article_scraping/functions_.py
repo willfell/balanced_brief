@@ -1,10 +1,12 @@
 import os
 import openai
+import time
 import psycopg2
 import json
 from newspaper import Article
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+import boto3
 
 temperature = 0.5
 
@@ -27,11 +29,11 @@ cur = conn.cursor()
 openai.api_key = os.environ['OPENAI_KEY']
 
 
-def proomptThatShit(scraped_article):
+def proomptThatShit(scraped_article, retries=5, delay=5):
 
 
     print(f"Length of article before trimming = {len(scraped_article)}")
-    max_length = 5600
+    max_length = 9000
     if len(scraped_article) >= max_length:
         print("Trimming content")
         scraped_article = scraped_article[:max_length].rsplit(' ', 1)[0]
@@ -47,7 +49,8 @@ def proomptThatShit(scraped_article):
     max_tokens = prompt_length + max_output_tokens + buffer
     print(f"Tokens desired = {max_tokens}")
 
-    model_engine = "gpt-4"
+    # model_engine = "gpt-4"
+    model_engine = "gpt-3.5-turbo-16k"
 
     messages = [
         {"role": "system", "content": f"{system_prompt}"},
@@ -55,31 +58,40 @@ def proomptThatShit(scraped_article):
     ]
 
 
-    response = openai.ChatCompletion.create(
-        model=model_engine,
-        messages=messages,
-        temperature=temperature,
-        max_tokens=max_tokens,
-        n=1,
-        stop=None,
-        presence_penalty=0.0,
-        frequency_penalty=0.0,
-    )
+    for attempt in range(retries):
+        try:
+            response = openai.ChatCompletion.create(
+                model=model_engine,
+                messages=messages,
+                temperature=temperature,  # ensure 'temperature' is defined in your code
+                max_tokens=max_tokens,
+                n=1,
+                stop=None,
+                presence_penalty=0.0,
+                frequency_penalty=0.0,
+            )
+            generated_texts = [
+                choice.message["content"].strip() for choice in response["choices"]
+            ]
+            return generated_texts[0]
 
-    generated_texts = [
-        choice.message["content"].strip() for choice in response["choices"]
-    ]
+        except openai.error.OpenaiError as e:
+            # If it's the last retry, raise the exception
+            if attempt == retries - 1:
+                raise e
+            print(f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds...")
+            time.sleep(delay)  # wait for some time before retrying
 
-    return generated_texts[0]
+    return None
 
 
 
 
-def proompt_summary_to_title(article_summary):
+def proompt_summary_to_title(article_summary, retries=5, delay=5):
 
     max_length = 2500
-    #model_engine = "text-davinci-003"
-    model_engine = "gpt-4"
+    # model_engine = "gpt-4"
+    model_engine = "gpt-3.5-turbo-16k"
 
 
     # chat_prompt = f"Assistant, make this sound satirical in 10 words or less:\n{article_summary}"
@@ -96,23 +108,33 @@ def proompt_summary_to_title(article_summary):
     ]
 
 
-    response = openai.ChatCompletion.create(
-        model=model_engine,
-        messages=messages,
-        temperature=temperature,
-        max_tokens=max_tokens,
-        n=1,
-        stop=None,
-        presence_penalty=0.0,
-        frequency_penalty=0.0,
-    )
+    for attempt in range(retries):
+        try:
+            response = openai.ChatCompletion.create(
+                model=model_engine,
+                messages=messages,
+                temperature=temperature,  # ensure 'temperature' is defined in your code
+                max_tokens=max_tokens,
+                n=1,
+                stop=None,
+                presence_penalty=0.0,
+                frequency_penalty=0.0,
+            )
+            generated_texts = [
+                choice.message["content"].strip() for choice in response["choices"]
+            ]
+            return generated_texts[0]
 
+        except openai.error.OpenaiError as e:
+            # If it's the last retry, raise the exception
+            if attempt == retries - 1:
+                raise e
+            print(f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds...")
+            time.sleep(delay)  # wait for some time before retrying
 
-    generated_texts = [
-        choice.message["content"].strip() for choice in response["choices"]
-    ]
-    
-    return generated_texts[0]
+    # This line should never be reached due to the raise statement above, 
+    # but it's here to ensure the function has a return or raise in all possible code paths.
+    return None
 
 
 
@@ -395,4 +417,3 @@ def gather_articles_to_scrape():
         articles_to_scrape['reddit_posts'].append(article_data)
 
     return articles_to_scrape
-
