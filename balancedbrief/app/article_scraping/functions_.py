@@ -75,7 +75,7 @@ def proomptThatShit(scraped_article, retries=5, delay=5):
             ]
             return generated_texts[0]
 
-        except openai.error.OpenaiError as e:
+        except openai.error.APIError as e:
             # If it's the last retry, raise the exception
             if attempt == retries - 1:
                 raise e
@@ -125,7 +125,7 @@ def proompt_summary_to_title(article_summary, retries=5, delay=5):
             ]
             return generated_texts[0]
 
-        except openai.error.OpenaiError as e:
+        except openai.error.APIError as e:
             # If it's the last retry, raise the exception
             if attempt == retries - 1:
                 raise e
