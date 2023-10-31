@@ -1,0 +1,48 @@
+{
+    "DockerId": "cc4c83847df9460aa165a2f5ac57ea0d-508835849",
+    "Name": "",
+    "DockerName": "",
+    "Image": "",
+    "ImageID": "",
+    "Labels": {
+        "com.amazonaws.ecs.cluster": "",
+        "com.amazonaws.ecs.container-name": "",
+        "com.amazonaws.ecs.task-arn": "",
+        "com.amazonaws.ecs.task-definition-family": "",
+        "com.amazonaws.ecs.task-definition-version": ""
+    },
+    "DesiredStatus": "RUNNING",
+    "KnownStatus": "RUNNING",
+    "Limits": {
+        "CPU": 2
+    },
+    "CreatedAt": "",
+    "StartedAt": "",
+    "Type": "",
+    "LogDriver": "",
+    "LogOptions": {
+        "awslogs-group": "",
+        "awslogs-region": "",
+        "awslogs-stream": ""
+    },
+    "ContainerARN": "",
+    "Networks": [
+        {
+            "NetworkMode": "",
+            "IPv4Addresses": [
+                ""
+            ],
+            "AttachmentIndex": 0,
+            "MACAddress": "",
+            "IPv4SubnetCIDRBlock": "",
+            "DomainNameServers": [
+                ""
+            ],
+            "DomainNameSearchList": [
+                ""
+            ],
+            "SubnetGatewayIpv4Address": ""
+        }
+    ],
+    "Snapshotter": ""
+}
