@@ -12,9 +12,9 @@ from functools import wraps
 import sys
 import cssutils
 
-current_date = datetime.utcnow().strftime('%Y-%m-%d')
+current_date = datetime.utcnow().strftime("%Y-%m-%d")
 
-log = logging.getLogger()  
+log = logging.getLogger()
 
 
 # Obtain the list of users
@@ -23,9 +23,11 @@ post_list = obtain_posts()
 # email_list = determine_email_templates(user_list, post_list)
 category_order_mapping = determine_category_order()
 
-for user in user_list['list']:
+for user in user_list["list"]:
     print("====================================================================")
     print(f"Creating email template for user {user['user_email']}")
     print("====================================================================")
-    user_newsletter = generate_newsletter(post_list, category_order_mapping, user, current_date)
+    user_newsletter = generate_newsletter(
+        post_list, category_order_mapping, user, current_date
+    )
     create_and_send_email(user_newsletter, user, current_date)
