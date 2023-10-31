@@ -7,3 +7,6 @@ praw
 premailer
 boto3
 cssutils
+slack_sdk
+argparse
+pytz

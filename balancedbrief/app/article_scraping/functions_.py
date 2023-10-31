@@ -11,14 +11,14 @@ import boto3
 temperature = 0.5
 
 # set up connection parameters
-db_pass = os.environ['DB_PASS']
-db_host = os.environ['DB_HOST']
+db_pass = os.environ["POSTGRES_DB_PASS"]
+db_host = os.environ["POSTGRES_DB_HOST"]
 conn_params = {
-    'host': db_host,
-    'port': '5432',
-    'database': 'postgres',
-    'user': 'db_user',
-    'password': db_pass
+    "host": db_host,
+    "port": "5432",
+    "database": "postgres",
+    "user": "db_user",
+    "password": db_pass,
 }
 
 # Create a new connection and cursor object
@@ -26,20 +26,18 @@ conn = psycopg2.connect(**conn_params)
 cur = conn.cursor()
 
 
-openai.api_key = os.environ['OPENAI_KEY']
+openai.api_key = os.environ["OPENAI_KEY"]
 
 
 def proomptThatShit(scraped_article, retries=5, delay=5):
-
-
     print(f"Length of article before trimming = {len(scraped_article)}")
     max_length = 9000
     if len(scraped_article) >= max_length:
         print("Trimming content")
-        scraped_article = scraped_article[:max_length].rsplit(' ', 1)[0]
+        scraped_article = scraped_article[:max_length].rsplit(" ", 1)[0]
         print(f"New length for the content is {len(scraped_article)}")
 
-    #chat_prompt = f"Assistant, please summarize the following article professionally in 250 words so that a 20 year old can understand it:\n{scraped_article}"
+    # chat_prompt = f"Assistant, please summarize the following article professionally in 250 words so that a 20 year old can understand it:\n{scraped_article}"
     system_prompt = f"Assistant, please summarize the following article professionally in 50 words or less so that a 20 year old can understand it"
     # chat_prompt = f"Assistant, act like a nihilist summarizing the following article text without bias in 250 words:\n{scraped_article}"
     # chat_prompt = f"Assistant, act like a writer for the Wall Street Journal summarizing the following article text without bias in 250 words:\n{scraped_article}"
@@ -57,7 +55,6 @@ def proomptThatShit(scraped_article, retries=5, delay=5):
         {"role": "user", "content": scraped_article},
     ]
 
-
     for attempt in range(retries):
         try:
             response = openai.ChatCompletion.create(
@@ -79,26 +76,24 @@ def proomptThatShit(scraped_article, retries=5, delay=5):
             # If it's the last retry, raise the exception
             if attempt == retries - 1:
                 raise e
-            print(f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds...")
+            print(
+                f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds..."
+            )
             time.sleep(delay)  # wait for some time before retrying
 
     return None
 
 
-
-
 def proompt_summary_to_title(article_summary, retries=5, delay=5):
-
     max_length = 2500
     # model_engine = "gpt-4"
     model_engine = "gpt-3.5-turbo-16k"
-
 
     # chat_prompt = f"Assistant, make this sound satirical in 10 words or less:\n{article_summary}"
     system_prompt = f"Assistant, make a short and sweet article headline out of the following text without the use of quotes around it"
     prompt_length = len(system_prompt + article_summary)
     max_output_tokens = int(1.5 * 15)  # 15 words * 1.5 tokens/word = 22.5 tokens
-    buffer = int(0.1 * max_output_tokens)  # 10% buffer 
+    buffer = int(0.1 * max_output_tokens)  # 10% buffer
     max_tokens = prompt_length + max_output_tokens + buffer
     print(f"Tokens desired for title = {max_tokens}")
 
@@ -107,7 +102,6 @@ def proompt_summary_to_title(article_summary, retries=5, delay=5):
         {"role": "user", "content": article_summary},
     ]
 
-
     for attempt in range(retries):
         try:
             response = openai.ChatCompletion.create(
@@ -129,25 +123,29 @@ def proompt_summary_to_title(article_summary, retries=5, delay=5):
             # If it's the last retry, raise the exception
             if attempt == retries - 1:
                 raise e
-            print(f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds...")
+            print(
+                f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds..."
+            )
             time.sleep(delay)  # wait for some time before retrying
 
-    # This line should never be reached due to the raise statement above, 
+    # This line should never be reached due to the raise statement above,
     # but it's here to ensure the function has a return or raise in all possible code paths.
     return None
 
 
-
 def get_category(subreddit):
     cur.execute(
-        f"SELECT category from subreddits where subreddit_name = '{subreddit}';")
+        f"SELECT category from subreddits where subreddit_name = '{subreddit}';"
+    )
     results = cur.fetchall()
     category = results[0][0]
     return category
 
+
 def get_parent_category(subreddit):
     cur.execute(
-        f"SELECT parent_category from subreddits where subreddit_name = '{subreddit}';")
+        f"SELECT parent_category from subreddits where subreddit_name = '{subreddit}';"
+    )
     results = cur.fetchall()
     parent_category = results[0][0]
     return parent_category
@@ -159,18 +157,18 @@ def determine_subreddits():
     subreddit_names = [result[0] for result in results]
     return subreddit_names
 
-def submit_unsuccessful_post_to_db(post):
 
+def submit_unsuccessful_post_to_db(post):
     data_tuple = (
         datetime.utcnow(),
-        post['reddit_posts_id'],
-        post['post_id'],
-        post['subreddit'],
-        post['post_title'],
-        post['post_score'],
-        post['post_url'],
-        post['post_type'],
-        post['post_category']
+        post["reddit_posts_id"],
+        post["post_id"],
+        post["subreddit"],
+        post["post_title"],
+        post["post_score"],
+        post["post_url"],
+        post["post_type"],
+        post["post_category"],
     )
 
     # Define the INSERT statement
@@ -200,26 +198,25 @@ def submit_unsuccessful_post_to_db(post):
 
 
 def submit_successful_post_to_db(post):
-
     data_tuple = (
         datetime.utcnow(),
-        post['reddit_posts_id'],
-        post['post_id'],
-        post['subreddit'],
-        post['post_title'],
-        post['post_score'],
-        post['post_url'],
-        post['post_type'],
-        post['post_content'],
-        post['post_summary'],
-        post['post_title_summary'],
-        post['post_image_url'],
-        post['post_category'],
-        post['post_parent_category'],
-        post['article_title'],
-        post['article_authors'],
-        post['article_publish_date'],
-        post['article_source_url']
+        post["reddit_posts_id"],
+        post["post_id"],
+        post["subreddit"],
+        post["post_title"],
+        post["post_score"],
+        post["post_url"],
+        post["post_type"],
+        post["post_content"],
+        post["post_summary"],
+        post["post_title_summary"],
+        post["post_image_url"],
+        post["post_category"],
+        post["post_parent_category"],
+        post["article_title"],
+        post["article_authors"],
+        post["article_publish_date"],
+        post["article_source_url"],
     )
 
     # Define the INSERT statement
@@ -258,9 +255,10 @@ def submit_successful_post_to_db(post):
 
 
 def submit_reddit_post_to_db(post, subreddit, post_type, category, parent_category):
-
     post_title = post.title
-    post_title = post_title.encode('windows-1252', errors='ignore').decode('utf-8', errors='ignore')
+    post_title = post_title.encode("windows-1252", errors="ignore").decode(
+        "utf-8", errors="ignore"
+    )
 
     json_data = {
         "time": datetime.utcnow(),
@@ -271,19 +269,19 @@ def submit_reddit_post_to_db(post, subreddit, post_type, category, parent_catego
         "post_type": post_type,
         "post_category": category,
         "post_parent_category": parent_category,
-        "post_id": post.id
+        "post_id": post.id,
     }
 
     data_tuple = (
-        json_data['time'],
-        json_data['subreddit'],
-        json_data['post_title'],
-        json_data['post_score'],
-        json_data['post_url'],
-        json_data['post_type'],
-        json_data['post_category'],
-        json_data['post_parent_category'],
-        json_data['post_id']
+        json_data["time"],
+        json_data["subreddit"],
+        json_data["post_title"],
+        json_data["post_score"],
+        json_data["post_url"],
+        json_data["post_type"],
+        json_data["post_category"],
+        json_data["post_parent_category"],
+        json_data["post_id"],
     )
 
     # Define the INSERT statement
@@ -313,19 +311,18 @@ def submit_reddit_post_to_db(post, subreddit, post_type, category, parent_catego
 
 
 def is_it_scrapable(url, subreddit):
-
     min_article_length = 400
     article = Article(url)
     try:
         article.download()
         article.parse()
         html = article.html
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html, "html.parser")
 
         if article.clean_top_node is not None:
             main_content_element = soup.find(
-                article.clean_top_node.tag, class_=article.clean_top_node.get('class'))
-            
+                article.clean_top_node.tag, class_=article.clean_top_node.get("class")
+            )
 
             if main_content_element:
                 post_content = main_content_element.get_text(strip=True)
@@ -334,40 +331,43 @@ def is_it_scrapable(url, subreddit):
 
                 if post_content == "":
                     return False
-                
+
                 print(f"Article {url} | subreddit {subreddit} | Success scraping")
                 return True
             else:
                 return False
         else:
             print(
-                f"Article {url} | subreddit {subreddit} | Failed to find clean top node")
+                f"Article {url} | subreddit {subreddit} | Failed to find clean top node"
+            )
             return False
     except:
         return False
 
 
 def scrape_post_content(post):
-
-    article = Article(post['post_url'])
+    article = Article(post["post_url"])
 
     try:
         article.download()
         article.parse()
         html = article.html
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html, "html.parser")
 
         main_content_element = soup.find(
-            article.clean_top_node.tag, class_=article.clean_top_node.get('class'))
+            article.clean_top_node.tag, class_=article.clean_top_node.get("class")
+        )
 
-        post['article_title'] = article.title
-        post['article_authors'] = article.authors
-        post['article_publish_date'] = str(article.publish_date)
-        post['article_source_url'] = article.source_url
-        post['post_image_url'] = article.top_image
-        post['post_content'] = main_content_element.get_text(strip=True)
+        post["article_title"] = article.title
+        post["article_authors"] = article.authors
+        post["article_publish_date"] = str(article.publish_date)
+        post["article_source_url"] = article.source_url
+        post["post_image_url"] = article.top_image
+        post["post_content"] = main_content_element.get_text(strip=True)
     except:
-        print(f"Article Scraping failed for URL {post['post_url']}\nsubmitting to unsuccessful_posts")
+        print(
+            f"Article Scraping failed for URL {post['post_url']}\nsubmitting to unsuccessful_posts"
+        )
         submit_unsuccessful_post_to_db(post)
 
     return post
@@ -381,7 +381,8 @@ def is_it_duplicate(post_id):
         return False
     else:
         return True
-    
+
+
 def is_scrape_duplicate(post_id):
     cur.execute(f"SELECT id from successful_posts where post_id = '{post_id}';")
     results = cur.fetchall()
@@ -393,27 +394,28 @@ def is_scrape_duplicate(post_id):
 
 
 def gather_articles_to_scrape():
-
     today_datetime_utc = datetime.utcnow()
     yesterday_datetime_utc = today_datetime_utc - timedelta(days=1)
 
-    cur.execute(f"SELECT * FROM reddit_posts WHERE time between %s AND %s;",
-                (yesterday_datetime_utc, today_datetime_utc))
+    cur.execute(
+        f"SELECT * FROM reddit_posts WHERE time between %s AND %s;",
+        (yesterday_datetime_utc, today_datetime_utc),
+    )
     results = cur.fetchall()
 
     articles_to_scrape = {}
-    articles_to_scrape['reddit_posts'] = []
+    articles_to_scrape["reddit_posts"] = []
     for article in results:
         article_data = {}
-        article_data['reddit_posts_id'] = article[0]
-        article_data['post_id'] = article[1]
-        article_data['subreddit'] = article[3]
-        article_data['post_title'] = article[4]
-        article_data['post_score'] = article[5]
-        article_data['post_url'] = article[6]
-        article_data['post_type'] = article[7]
-        article_data['post_category'] = article[8]
-        article_data['post_parent_category'] = article[9]
-        articles_to_scrape['reddit_posts'].append(article_data)
+        article_data["reddit_posts_id"] = article[0]
+        article_data["post_id"] = article[1]
+        article_data["subreddit"] = article[3]
+        article_data["post_title"] = article[4]
+        article_data["post_score"] = article[5]
+        article_data["post_url"] = article[6]
+        article_data["post_type"] = article[7]
+        article_data["post_category"] = article[8]
+        article_data["post_parent_category"] = article[9]
+        articles_to_scrape["reddit_posts"].append(article_data)
 
     return articles_to_scrape

@@ -7,12 +7,6 @@ resource "aws_ecs_cluster" "main" {
 resource "aws_ecs_task_definition" "task_def" {
   family = var.project_short_name
   container_definitions = templatefile("${path.cwd}/task-definitions/db-service.json", {
-    REDDITCLIENTID     = data.aws_secretsmanager_secret_version.reddit_client_id.secret_string
-    REDDITCLIENTSECRET = data.aws_secretsmanager_secret_version.reddit_client_secret.secret_string
-    REDDITAGENT        = data.aws_secretsmanager_secret_version.reddit_user_agent.secret_string
-    OPENAI_KEY         = data.aws_secretsmanager_secret_version.open_ai_key.secret_string
-    DB_PASS            = data.aws_secretsmanager_secret_version.db_pass.secret_string
-    DB_HOST            = data.aws_secretsmanager_secret_version.db_host.secret_string
     IMAGE              = docker_registry_image.image.name
     NAME               = "${var.project_short_name}-task"
     LOGGROUP           = aws_cloudwatch_log_group.logs.name
@@ -23,8 +17,8 @@ resource "aws_ecs_task_definition" "task_def" {
   })
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 256
-  memory                   = 512
+  cpu                      = 512
+  memory                   = 1024
   task_role_arn            = aws_iam_role.app_task_role.arn
   execution_role_arn       = aws_iam_role.role.arn
   runtime_platform {
@@ -54,7 +48,7 @@ resource "aws_ecs_service" "main" {
 
 resource "aws_cloudwatch_event_rule" "scheduled_task" {
   name                = "scheduled-ecs-event-rule"
-  schedule_expression = "cron(0 12 * * ? *)"
+  schedule_expression = "cron(0 13 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "scheduled_task" {

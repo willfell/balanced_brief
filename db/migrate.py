@@ -2,8 +2,8 @@ import psycopg2
 import importlib
 import os
 
-DB_PASS = os.environ['DB_PASS']
-DB_HOST = os.environ['DB_HOST']
+DB_PASS = os.environ['POSTGRES_DB_PASS']
+DB_HOST = os.environ['POSTGRES_DB_HOST']
 DB_USER = 'db_user'
 DB_NAME = 'postgres'
 DB_PORT = '5432'
