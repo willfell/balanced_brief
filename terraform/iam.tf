@@ -95,6 +95,11 @@ resource "aws_iam_policy" "task_role_policy" {
         ],
         Effect   = "Allow",
         Resource = "*"
+      },
+      {
+        Action   = "secretsmanager:GetSecretValue",
+        Effect   = "Allow",
+        Resource = "arn:aws:secretsmanager:us-west-1:634560051830:secret:bb/config-a8PFCV"
       }
     ]
   })

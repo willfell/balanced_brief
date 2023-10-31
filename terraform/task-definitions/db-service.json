@@ -17,30 +17,6 @@
         "entryPoint": ["sh", "init.sh"],
         "environment": [
             {
-                "name": "REDDITCLIENTID",
-                "value": "${REDDITCLIENTID}"
-            },
-            {
-                "name": "REDDITCLIENTSECRET",
-                "value": "${REDDITCLIENTSECRET}"
-            },
-            {
-                "name": "REDDITAGENT",
-                "value": "${REDDITAGENT}"
-            },
-            {
-                "name": "OPENAI_KEY",
-                "value": "${OPENAI_KEY}"
-            },
-            {
-                "name": "DB_PASS",
-                "value": "${DB_PASS}"
-            },
-            {
-                "name": "DB_HOST",
-                "value": "${DB_HOST}"
-            },
-            {
                 "name": "ENV",
                 "value": "${ENV}"
             },

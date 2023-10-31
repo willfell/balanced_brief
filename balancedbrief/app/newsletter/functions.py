@@ -19,8 +19,8 @@ region = 'us-west-1'
 client = boto3.client('ses', region_name=region)
 
 # set up connection parameters
-db_pass = os.environ['DB_PASS']
-db_host = os.environ['DB_HOST']
+db_pass = os.environ['POSTGRES_DB_PASS']
+db_host = os.environ['POSTGRES_DB_HOST']
 conn_params = {
     'host': db_host,
     'port': '5432',
@@ -192,6 +192,9 @@ def determine_category_order():
     return category_order_mapping
 
 def create_and_send_email(user_newsletter, user, current_date):
+    duplicate_send = send_duplicate_check(user)
+    if duplicate_send:
+        return False
     msg = MIMEMultipart()
     msg['From'] = 'TheBalancedBrief@balancedbrief.com'
     msg['Subject'] = f"The Balanced Brief - {current_date}"
@@ -299,3 +302,30 @@ def unsucessful_email(user, current_date_time, failure_reason):
         print(f"Failed to insert data for user {user['user_email']} on email FAILURE. Error: {e}")
         return False
 
+def send_duplicate_check(user):
+    if 'willfellhoelter' in user['user_email']:
+        print("It's Will, moving through email creation")
+        return False
+
+    print(f"Running duplicate check for user {user['user_email']}")
+    user_id = user['user_id']
+
+    query = '''
+        SELECT EXISTS (
+            SELECT 1
+            FROM successful_email_sends
+            WHERE user_id = %s
+            AND success = TRUE
+            AND timestamp > (CURRENT_TIMESTAMP - INTERVAL '16 hours')
+        );
+    '''
+    cur.execute(query, (user_id,))
+    has_been_sent = cur.fetchone()[0]
+    if not has_been_sent:
+        print(f"Email has not been sent to user {user['user_email']}, going through with email template creation")
+        return False
+    else:
+        print(f"Email has already been sent to user {user['user_email']}, moving to next user")
+        return True
+
+    return True

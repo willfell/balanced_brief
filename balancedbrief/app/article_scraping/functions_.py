@@ -11,8 +11,8 @@ import boto3
 temperature = 0.5
 
 # set up connection parameters
-db_pass = os.environ['DB_PASS']
-db_host = os.environ['DB_HOST']
+db_pass = os.environ['POSTGRES_DB_PASS']
+db_host = os.environ['POSTGRES_DB_HOST']
 conn_params = {
     'host': db_host,
     'port': '5432',
