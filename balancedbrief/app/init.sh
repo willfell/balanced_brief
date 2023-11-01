@@ -117,4 +117,4 @@ if [ "$EXECUTION_LOCATION" != "LOCAL" ]; then
 else
     $SLACK final_message_success "$ts" "Job Ran Successfully"
     $SLACK final_job_run_success "$ts" 
-
+fi
