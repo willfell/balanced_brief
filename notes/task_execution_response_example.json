@@ -1,48 +1,49 @@
 {
-    "DockerId": "cc4c83847df9460aa165a2f5ac57ea0d-508835849",
-    "Name": "",
-    "DockerName": "",
-    "Image": "",
-    "ImageID": "",
+    "DockerId": "d5831c06b7fc4a13afab8cba43bbedc6-3156436106",
+    "Name": "balanced-brief-tmp-task-py",
+    "DockerName": "balanced-brief-tmp-task-py",
+    "Image": "634560051830.dkr.ecr.us-west-1.amazonaws.com/bf-repo:20231101172002",
+    "ImageID": "sha256:55288fd05ee206a7b820b5b6de20e93e5c6c800135bc1c9450851b69e6f5bb7b",
     "Labels": {
-        "com.amazonaws.ecs.cluster": "",
-        "com.amazonaws.ecs.container-name": "",
-        "com.amazonaws.ecs.task-arn": "",
-        "com.amazonaws.ecs.task-definition-family": "",
-        "com.amazonaws.ecs.task-definition-version": ""
+        "com.amazonaws.ecs.cluster": "arn:aws:ecs:us-west-1:634560051830:cluster/bf-cluster",
+        "com.amazonaws.ecs.container-name": "balanced-brief-tmp-task-py",
+        "com.amazonaws.ecs.task-arn": "arn:aws:ecs:us-west-1:634560051830:task/bf-cluster/d5831c06b7fc4a13afab8cba43bbedc6",
+        "com.amazonaws.ecs.task-definition-family": "bf-cluster-temporary-task",
+        "com.amazonaws.ecs.task-definition-version": "12"
     },
     "DesiredStatus": "RUNNING",
     "KnownStatus": "RUNNING",
     "Limits": {
-        "CPU": 2
+        "CPU": 512,
+        "Memory": 1024
     },
-    "CreatedAt": "",
-    "StartedAt": "",
-    "Type": "",
-    "LogDriver": "",
+    "CreatedAt": "2023-11-02T16:10:49.741886527Z",
+    "StartedAt": "2023-11-02T16:10:49.741886527Z",
+    "Type": "NORMAL",
+    "LogDriver": "awslogs",
     "LogOptions": {
-        "awslogs-group": "",
-        "awslogs-region": "",
-        "awslogs-stream": ""
+        "awslogs-group": "/aws/ecs/bf-logs",
+        "awslogs-region": "us-west-1",
+        "awslogs-stream": "bf/balanced-brief-tmp-task-py/d5831c06b7fc4a13afab8cba43bbedc6"
     },
-    "ContainerARN": "",
+    "ContainerARN": "arn:aws:ecs:us-west-1:634560051830:container/bf-cluster/d5831c06b7fc4a13afab8cba43bbedc6/e553ae0b-6e55-42bb-aa62-c03a5fa420a4",
     "Networks": [
         {
-            "NetworkMode": "",
+            "NetworkMode": "awsvpc",
             "IPv4Addresses": [
-                ""
+                "10.0.1.200"
             ],
             "AttachmentIndex": 0,
-            "MACAddress": "",
-            "IPv4SubnetCIDRBlock": "",
+            "MACAddress": "06:28:c5:a1:c4:8d",
+            "IPv4SubnetCIDRBlock": "10.0.1.0/24",
             "DomainNameServers": [
-                ""
+                "10.0.0.2"
             ],
             "DomainNameSearchList": [
-                ""
+                "us-west-1.compute.internal"
             ],
-            "SubnetGatewayIpv4Address": ""
+            "SubnetGatewayIpv4Address": "10.0.1.1/24"
         }
     ],
-    "Snapshotter": ""
+    "Snapshotter": "overlayfs"
 }

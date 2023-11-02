@@ -20,7 +20,7 @@ except:
 # Initialize a Web API client
 client = WebClient(token=os.environ["SLACK_TOKEN"])
 if os.environ['EXECUTION_LOCATION'] != "LOCAL":
-    task_execution_url = f"https://us-west-1.console.aws.amazon.com/ecs/v2/clusters/bf-cluster/tasks/{os.environ['AWS_TASK_ID']}/configuration?region=us-west-1&selectedContainer=bf-service"
+    task_execution_url = f"https://us-west-1.console.aws.amazon.com/ecs/v2/clusters/bf-cluster/tasks/{os.environ['TASK_ID']}/configuration?region=us-west-1&selectedContainer={os.environ['TASK_SERVICE']}"
 else:
     task_execution_url = "https://us-west-1.console.aws.amazon.com/ecs/v2/clusters/bf-cluster/services?region=us-west-1"
 

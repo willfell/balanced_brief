@@ -9,9 +9,10 @@ else
 fi
 
 METADATA=$(curl $ECS_CONTAINER_METADATA_URI_V4)
-echo "$METADATA"
-AWS_TASK_ID=$(echo $METADATA | jq -r '.DockerId')
-export AWS_TASK_ID  
+TASK_ID=$(echo $METADATA | jq -r '.DockerId | split("-")[0]')
+TASK_SERVICE=$(echo $METADATA | jq -r '.DockerName')
+export TASK_ID
+export TASK_SERVICE
 
 config=$(aws secretsmanager get-secret-value --secret-id "$SECRET_NAME" --query 'SecretString' --output text)
 while IFS="=" read -r key value; do

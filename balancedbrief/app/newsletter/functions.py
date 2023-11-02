@@ -202,6 +202,9 @@ def create_and_send_email(user_newsletter, user, current_date):
     duplicate_send = send_duplicate_check(user)
     if duplicate_send:
         return False
+    if os.environ['ENV'] == "TEST":
+        if 'willfell' not in user["user_email"]:
+            return False
     msg = MIMEMultipart()
     msg["From"] = "TheBalancedBrief@balancedbrief.com"
     msg["Subject"] = f"The Balanced Brief - {current_date}"
