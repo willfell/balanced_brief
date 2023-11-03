@@ -73,17 +73,34 @@ echo "==========================================================================
 echo "Running Article Scraping" 
 echo "======================================================================================"
 echo "======================================================================================"
-$SLACK progress_message "$ts" "Scraping Articles"
-python3 /app/article_scraping/scraping.py
-if [ $? -ne 0 ]; then
-    $SLACK final_message_failure "$ts" "Scraping Articles Failed"
+$SLACK progress_message "$ts" "Starting Article Scraping"
+max_attempts=4
+attempt=1
+success=false
+
+while [ $attempt -lt $max_attempts ]; do
+    $SLACK progress_message "$ts" "Article Scraping Attempt #$attempt"
+    python3 /app/article_scraping/scraping.py
+    result=$?
+    if [ $result -eq 0 ]; then
+        success=true
+        break
+    else
+        $SLACK progress_message "$ts" "Scraping Attempt failed"
+        attempt=$((attempt+1))
+        echo "Attempt $attempt of $max_attempts failed. Retrying..."
+        sleep 5 # Wait for 5 seconds before retrying
+    fi
+done
+
+if [ $success = true ]; then
+    $SLACK progress_message "$ts" ":white_check_mark: Article Scraping Completed Successfully"
+else
+    $SLACK final_message_failure "$ts" "Scraping Articles Failed after $max_attempts attempts"
     $SLACK final_job_run_failure "$ts"
     stop_instance
     exit 1
-    else
-        $SLACK progress_message "$ts" ":white_check_mark: Article Scraping Completed Successfully"
 fi
-
 
 
 echo "======================================================================================"
