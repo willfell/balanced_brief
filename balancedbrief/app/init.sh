@@ -66,7 +66,7 @@ if [ $? -ne 0 ]; then
     else
         $SLACK progress_message "$ts" ":white_check_mark: Migrations Completed Successfully"
 fi
-
+exit
 
 echo "======================================================================================"
 echo "======================================================================================"

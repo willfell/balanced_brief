@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Balanced Brief</title>
+    <style>
+        .indent { margin-left: 20px; }
+        label { display: block; }
+        .category { font-weight: bold; }
+    </style>
+    <script src="script.js"></script>
+</head>
+<body>
+    <h1>Balanced Brief</h1>
+    <form id="newsForm">
+        <div>
+            <label class="category"><input type="checkbox" id="news" onclick="toggleChildren(event)"> News</label>
+            <label class="indent"><input type="checkbox" class="news" value="General News"> General News</label>
+            <label class="indent"><input type="checkbox" class="news" value="World News"> World News</label>
+        </div>
+        <div>
+            <label class="category"><input type="checkbox" id="finance" onclick="toggleChildren(event)"> Finance</label>
+            <label class="indent"><input type="checkbox" class="finance" value="General News"> General News</label>
+            <label class="indent"><input type="checkbox" class="finance" value="World News"> World News</label>
+        </div>
+        <div>
+            <label class="category"><input type="checkbox" id="tech-news" onclick="toggleChildren(event)"> Tech News</label>
+            <label class="indent"><input type="checkbox" class="tech-news" value="Technology"> Technology</label>
+            <label class="indent"><input type="checkbox" class="tech-news" value="Gaming"> Gaming</label>
+            <label class="indent"><input type="checkbox" class="tech-news" value="PC Gaming"> PC Gaming</label>
+            <label class="indent"><input type="checkbox" class="tech-news" value="Programming"> Programming</label>
+            <label class="indent"><input type="checkbox" class="tech-news" value="Android"> Android</label>
+            <label class="indent"><input type="checkbox" class="tech-news" value="Apple"> Apple</label>
+            <label class="indent"><input type="checkbox" class="tech-news" value="Science"> Science</label>
+            <label class="indent"><input type="checkbox" class="tech-news" value="AI"> AI</label>
+        </div>
+        <div>
+            <label class="category"><input type="checkbox" id="catered-news" onclick="toggleChildren(event)"> Catered News</label>
+            <label class="indent"><input type="checkbox" class="catered-news" value="Conservative News"> Conservative News</label>
+            <label class="indent"><input type="checkbox" class="catered-news" value="Liberal News"> Liberal News</label>
+            <label class="indent"><input type="checkbox" class="catered-news" value="Environment"> Environment</label>
+        </div>
+        <div>
+            <label class="category"><input type="checkbox" id="offbeat-news" onclick="toggleChildren(event)"> Offbeat News</label>
+            <label class="indent"><input type="checkbox" class="offbeat-news" value="Uplifting News"> Uplifting News</label>
+            <label class="indent"><input type="checkbox" class="offbeat-news" value="Oddly Interesting News"> Oddly Interesting News</label>
+            <label class="indent"><input type="checkbox" class="offbeat-news" value="Conspiracy"> Conspiracy</label>
+        </div>
+        <div>
+            <label class="category"><input type="checkbox" id="sports" onclick="toggleChildren(event)"> Sports</label>
+            <label class="indent"><input type="checkbox" class="sports" value="Sports"> Sports</label>
+            <label class="indent"><input type="checkbox" class="sports" value="NFL"> NFL</label>
+            <label class="indent"><input type="checkbox" class="sports" value="Soccer"> Soccer</label>
+            <label class="indent"><input type="checkbox" class="sports" value="Hockey"> Hockey</label>
+            <label class="indent"><input type="checkbox" class="sports" value="NBA"> NBA</label>
+        </div>
+        <div>
+            <label class="category"><input type="checkbox" id="entertainment" onclick="toggleChildren(event)"> Entertainment</label>
+            <label class="indent"><input type="checkbox" class="entertainment" value="Movies"> Movies</label>
+            <label class="indent"><input type="checkbox" class="entertainment" value="Television"> Television</label>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+        </div>
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+</body>
+</html>

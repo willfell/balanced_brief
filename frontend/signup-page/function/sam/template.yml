@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Sign up users
+Globals:
+  Function:
+    Timeout: 60
+
+Resources:
+  UserSignUp:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../
+      Handler: app.add_user
+      Runtime: python3.9
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - CloudWatchLambdaInsightsExecutionRolePolicy
+      - AWSSecretsManagerGetSecretValuePolicy:
+          SecretArn: arn:aws:secretsmanager:us-west-1:634560051830:secret:bb/config-local-AD0EJZ
+      Events:
+        SignUpOption:
+          Type: Api
+          Properties:
+            Path: /user/signup
+            Method: options
+        SignUpPost:
+          Type: Api
+          Properties:
+            Path: /user/signup
+            Method: post
