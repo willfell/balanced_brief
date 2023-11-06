@@ -74,7 +74,7 @@ echo "Running Article Scraping"
 echo "======================================================================================"
 echo "======================================================================================"
 $SLACK progress_message "$ts" "Starting Article Scraping"
-max_attempts=4
+max_attempts=10
 attempt=1
 success=false
 

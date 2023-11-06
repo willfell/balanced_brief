@@ -55,6 +55,9 @@ def proomptThatShit(scraped_article, retries=5, delay=5):
         {"role": "user", "content": scraped_article},
     ]
 
+    base_delay = 1  # Start with a 1 second delay
+    backoff_multiplier = 2  # Use a backoff multiplier of 2
+
     for attempt in range(retries):
         try:
             response = openai.ChatCompletion.create(
@@ -79,6 +82,9 @@ def proomptThatShit(scraped_article, retries=5, delay=5):
             print(
                 f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds..."
             )
+            # Apply exponential backoff with a cap of 32 seconds
+            delay = min(base_delay * (backoff_multiplier ** attempt), 32)
+            print(f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds...")
             time.sleep(delay)  # wait for some time before retrying
 
     return None
@@ -102,6 +108,9 @@ def proompt_summary_to_title(article_summary, retries=5, delay=5):
         {"role": "user", "content": article_summary},
     ]
 
+    base_delay = 1  # Start with a 1 second delay
+    backoff_multiplier = 2  # Use a backoff multiplier of 2
+
     for attempt in range(retries):
         try:
             response = openai.ChatCompletion.create(
@@ -126,10 +135,10 @@ def proompt_summary_to_title(article_summary, retries=5, delay=5):
             print(
                 f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds..."
             )
+            # Apply exponential backoff with a cap of 32 seconds
+            delay = min(base_delay * (backoff_multiplier ** attempt), 32)
+            print(f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds...")
             time.sleep(delay)  # wait for some time before retrying
-
-    # This line should never be reached due to the raise statement above,
-    # but it's here to ensure the function has a return or raise in all possible code paths.
     return None
 
 

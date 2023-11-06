@@ -17,8 +17,8 @@ resource "aws_ecs_task_definition" "task_def" {
   })
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 512
-  memory                   = 1024
+  cpu                      = 1024
+  memory                   = 2048
   task_role_arn            = aws_iam_role.app_task_role.arn
   execution_role_arn       = aws_iam_role.role.arn
   runtime_platform {
@@ -48,7 +48,7 @@ resource "aws_ecs_service" "main" {
 
 resource "aws_cloudwatch_event_rule" "scheduled_task" {
   name                = "scheduled-ecs-event-rule"
-  schedule_expression = "cron(0 13 * * ? *)"
+  schedule_expression = "cron(0 12 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "scheduled_task" {

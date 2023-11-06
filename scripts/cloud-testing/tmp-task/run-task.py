@@ -62,8 +62,8 @@ def run_command():
             {
                 "name": "balanced-brief-tmp-task-py",
                 "image": image_used,
-                "cpu": 512,
-                "memory": 1024,
+                "cpu": 1024,
+                "memory": 2048,
                 "essential": True,
                 "environment": environment_vars,
                 "entryPoint": ["sh", "init.sh"],
@@ -87,9 +87,9 @@ def run_command():
         requiresCompatibilities=[
             "FARGATE",
         ],
-        cpu="512",
-        memory="1024",
-        runtimePlatform = {
+        cpu="1024",
+        memory="2048",
+        runtimePlatform={
             "cpuArchitecture": "ARM64",
             "operatingSystemFamily": "LINUX",
         },
