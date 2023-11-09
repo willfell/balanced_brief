@@ -10,6 +10,9 @@ import boto3
 
 temperature = 0.5
 
+# gpt_model = 'gpt-4-1106-preview'
+gpt_model = "gpt-3.5-turbo-16k"
+
 # set up connection parameters
 db_pass = os.environ["POSTGRES_DB_PASS"]
 db_host = os.environ["POSTGRES_DB_HOST"]
@@ -31,14 +34,14 @@ openai.api_key = os.environ["OPENAI_KEY"]
 
 def proomptThatShit(scraped_article, retries=5, delay=5):
     print(f"Length of article before trimming = {len(scraped_article)}")
-    max_length = 9000
+    max_length = 15000
     if len(scraped_article) >= max_length:
         print("Trimming content")
         scraped_article = scraped_article[:max_length].rsplit(" ", 1)[0]
         print(f"New length for the content is {len(scraped_article)}")
 
     # chat_prompt = f"Assistant, please summarize the following article professionally in 250 words so that a 20 year old can understand it:\n{scraped_article}"
-    system_prompt = f"Assistant, please summarize the following article professionally in 50 words or less so that a 20 year old can understand it"
+    system_prompt = f"Assistant, please summarize the following article professionally in 50 words or less so that a 30 year old can understand it"
     # chat_prompt = f"Assistant, act like a nihilist summarizing the following article text without bias in 250 words:\n{scraped_article}"
     # chat_prompt = f"Assistant, act like a writer for the Wall Street Journal summarizing the following article text without bias in 250 words:\n{scraped_article}"
     prompt_length = len(system_prompt + scraped_article)
@@ -48,7 +51,7 @@ def proomptThatShit(scraped_article, retries=5, delay=5):
     print(f"Tokens desired = {max_tokens}")
 
     # model_engine = "gpt-4"
-    model_engine = "gpt-3.5-turbo-16k"
+    model_engine = gpt_model
 
     messages = [
         {"role": "system", "content": f"{system_prompt}"},
@@ -83,8 +86,10 @@ def proomptThatShit(scraped_article, retries=5, delay=5):
                 f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds..."
             )
             # Apply exponential backoff with a cap of 32 seconds
-            delay = min(base_delay * (backoff_multiplier ** attempt), 32)
-            print(f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds...")
+            delay = min(base_delay * (backoff_multiplier**attempt), 32)
+            print(
+                f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds..."
+            )
             time.sleep(delay)  # wait for some time before retrying
 
     return None
@@ -93,7 +98,7 @@ def proomptThatShit(scraped_article, retries=5, delay=5):
 def proompt_summary_to_title(article_summary, retries=5, delay=5):
     max_length = 2500
     # model_engine = "gpt-4"
-    model_engine = "gpt-3.5-turbo-16k"
+    model_engine = gpt_model
 
     # chat_prompt = f"Assistant, make this sound satirical in 10 words or less:\n{article_summary}"
     system_prompt = f"Assistant, make a short and sweet article headline out of the following text without the use of quotes around it"
@@ -136,8 +141,10 @@ def proompt_summary_to_title(article_summary, retries=5, delay=5):
                 f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds..."
             )
             # Apply exponential backoff with a cap of 32 seconds
-            delay = min(base_delay * (backoff_multiplier ** attempt), 32)
-            print(f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds...")
+            delay = min(base_delay * (backoff_multiplier**attempt), 32)
+            print(
+                f"Error on attempt {attempt + 1}: {e}. Retrying in {delay} seconds..."
+            )
             time.sleep(delay)  # wait for some time before retrying
     return None
 
