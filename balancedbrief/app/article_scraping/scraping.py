@@ -36,12 +36,8 @@ def gather_articles():
         for post in top_post:
             # Filter out bad posts
             if "jpg" in post.url:
-                print(
-                    f"Post URL appears to be a url with an image in it {post.url}, skipping"
-                )
                 continue
             elif "redd" in post.url:
-                print(f"Post URL has reddit in it with url {post.url}, skipping")
                 continue
             else:
                 post_type = "article"
