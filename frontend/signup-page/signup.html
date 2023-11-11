@@ -1,69 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Balanced Brief</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
     <style>
-        .indent { margin-left: 20px; }
-        label { display: block; }
-        .category { font-weight: bold; }
     </style>
     <script src="script.js"></script>
 </head>
+
 <body>
-    <h1>Balanced Brief</h1>
-    <form id="newsForm">
-        <div>
-            <label class="category"><input type="checkbox" id="news" onclick="toggleChildren(event)"> News</label>
-            <label class="indent"><input type="checkbox" class="news" value="General News"> General News</label>
-            <label class="indent"><input type="checkbox" class="news" value="World News"> World News</label>
-        </div>
-        <div>
-            <label class="category"><input type="checkbox" id="finance" onclick="toggleChildren(event)"> Finance</label>
-            <label class="indent"><input type="checkbox" class="finance" value="General News"> General News</label>
-            <label class="indent"><input type="checkbox" class="finance" value="World News"> World News</label>
-        </div>
-        <div>
-            <label class="category"><input type="checkbox" id="tech-news" onclick="toggleChildren(event)"> Tech News</label>
-            <label class="indent"><input type="checkbox" class="tech-news" value="Technology"> Technology</label>
-            <label class="indent"><input type="checkbox" class="tech-news" value="Gaming"> Gaming</label>
-            <label class="indent"><input type="checkbox" class="tech-news" value="PC Gaming"> PC Gaming</label>
-            <label class="indent"><input type="checkbox" class="tech-news" value="Programming"> Programming</label>
-            <label class="indent"><input type="checkbox" class="tech-news" value="Android"> Android</label>
-            <label class="indent"><input type="checkbox" class="tech-news" value="Apple"> Apple</label>
-            <label class="indent"><input type="checkbox" class="tech-news" value="Science"> Science</label>
-            <label class="indent"><input type="checkbox" class="tech-news" value="AI"> AI</label>
-        </div>
-        <div>
-            <label class="category"><input type="checkbox" id="catered-news" onclick="toggleChildren(event)"> Catered News</label>
-            <label class="indent"><input type="checkbox" class="catered-news" value="Conservative News"> Conservative News</label>
-            <label class="indent"><input type="checkbox" class="catered-news" value="Liberal News"> Liberal News</label>
-            <label class="indent"><input type="checkbox" class="catered-news" value="Environment"> Environment</label>
-        </div>
-        <div>
-            <label class="category"><input type="checkbox" id="offbeat-news" onclick="toggleChildren(event)"> Offbeat News</label>
-            <label class="indent"><input type="checkbox" class="offbeat-news" value="Uplifting News"> Uplifting News</label>
-            <label class="indent"><input type="checkbox" class="offbeat-news" value="Oddly Interesting News"> Oddly Interesting News</label>
-            <label class="indent"><input type="checkbox" class="offbeat-news" value="Conspiracy"> Conspiracy</label>
-        </div>
-        <div>
-            <label class="category"><input type="checkbox" id="sports" onclick="toggleChildren(event)"> Sports</label>
-            <label class="indent"><input type="checkbox" class="sports" value="Sports"> Sports</label>
-            <label class="indent"><input type="checkbox" class="sports" value="NFL"> NFL</label>
-            <label class="indent"><input type="checkbox" class="sports" value="Soccer"> Soccer</label>
-            <label class="indent"><input type="checkbox" class="sports" value="Hockey"> Hockey</label>
-            <label class="indent"><input type="checkbox" class="sports" value="NBA"> NBA</label>
-        </div>
-        <div>
-            <label class="category"><input type="checkbox" id="entertainment" onclick="toggleChildren(event)"> Entertainment</label>
-            <label class="indent"><input type="checkbox" class="entertainment" value="Movies"> Movies</label>
-            <label class="indent"><input type="checkbox" class="entertainment" value="Television"> Television</label>
-        </div>
-        <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" required>
-        </div>
-        <button type="button" onclick="submitForm()">Submit</button>
-    </form>
+    <div class="container mt-4">
+        <h1 class="mb-4">Balanced Brief</h1>
+        <form id="newsForm">
+            <!-- News Section -->
+            <div class="form-group">
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input" id="news" value="news"
+                        onclick="toggleChildren(event)"> News
+                </label>
+                <!-- Sub-categories for News -->
+                <div class="form-check ml-3">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input news" value="General News"> General News
+                    </label>
+                </div>
+                <div class="form-check ml-3">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input news" value="World News"> World News
+                    </label>
+                </div>
+
+
+                <!-- finance Section -->
+                <div class="form-group">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" id="finance" value="finance"
+                            onclick="toggleChildren(event)"> Finance
+                    </label>
+                    <!-- Sub-categories for finance -->
+                    <div class="form-check ml-3">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input finance" value="Economics"> Economics
+                        </label>
+                    </div>
+                    <div class="form-check ml-3">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input finance" value="Finance"> Finance
+                        </label>
+                    </div>
+
+                    <!-- Tech News Section -->
+                    <div class="form-group">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" id="tech-news" value="tech-news"
+                                onclick="toggleChildren(event)"> Tech News
+                        </label>
+                        <!-- Sub-categories for finance -->
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input tech-news" value="Technology"> Technology
+                            </label>
+                        </div>
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input tech-news" value="Gaming"> Gaming
+                            </label>
+                        </div>
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input tech-news" value="PC Gaming"> PC Gaming
+                            </label>
+                        </div>
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input tech-news" value="Programming">
+                                Programming
+                            </label>
+                        </div>
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input tech-news" value="Android"> Android
+                            </label>
+                        </div>
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input tech-news" value="Apple"> Apple
+                            </label>
+                        </div>
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input tech-news" value="Science"> Science
+                            </label>
+                        </div>
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input tech-news" value="AI"> AI
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- catered-news Section -->
+                    <div class="form-group">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" id="catered-news" value="catered-news"
+                                onclick="toggleChildren(event)"> Catered News
+                        </label>
+                        <!-- Sub-categories for catered-news -->
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input catered-news" value="Conservative News">
+                                Conservative News
+                            </label>
+                        </div>
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input catered-news" value="Liberal News">
+                                Liberal News
+                            </label>
+                        </div>
+                        <div class="form-check ml-3">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input catered-news" value="Environment">
+                                Environment
+                            </label>
+                        </div>
+
+
+                        <!-- offbeat-news Section -->
+                        <div class="form-group">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" id="offbeat-news" value="offbeat-news"
+                                    onclick="toggleChildren(event)"> Offbeat News
+                            </label>
+                            <!-- Sub-categories for offbeat-news -->
+                            <div class="form-check ml-3">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input offbeat-news" value="Uplifting News">
+                                    Uplifting News
+                                </label>
+                            </div>
+                            <div class="form-check ml-3">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input offbeat-news"
+                                        value="Oddly Interesting News"> Oddly Interesting News
+                                </label>
+                            </div>
+                            <div class="form-check ml-3">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input offbeat-news" value="Conspiracy">
+                                    Conspiracy
+                                </label>
+                            </div>
+                            <!-- sports Section -->
+                            <div class="form-group">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" id="sports" value="sports"
+                                        onclick="toggleChildren(event)"> Sports
+                                </label>
+                                <!-- Sub-categories for sports -->
+                                <div class="form-check ml-3">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input sports" value="Sports"> Sports
+                                    </label>
+                                </div>
+                                <div class="form-check ml-3">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input sports" value="NFL"> NFL
+                                    </label>
+                                </div>
+                                <div class="form-check ml-3">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input sports" value="Soccer"> Soccer
+                                    </label>
+                                </div>
+
+                                <div class="form-check ml-3">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input sports" value="Hockey"> Hockey
+                                    </label>
+                                </div>
+                                <div class="form-check ml-3">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input sports" value="NBA"> NBA
+                                    </label>
+                                </div>
+                                <!-- entertainment Section -->
+                                <div class="form-group">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" id="entertainment"
+                                            value="entertainment" onclick="toggleChildren(event)"> Entertainment
+                                    </label>
+                                    <!-- Sub-categories for entertainment -->
+                                    <div class="form-check ml-3">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input entertainment"
+                                                value="Movies"> Movies
+                                        </label>
+                                    </div>
+                                    <div class="form-check ml-3">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input entertainment"
+                                                value="Television"> Television
+                                        </label>
+                                    </div>
+                                    <div class="form-check ml-3">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input sports" value="Soccer">
+                                            Soccer
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check ml-3">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input sports" value="Hockey">
+                                            Hockey
+                                        </label>
+                                    </div>
+                                    <div class="form-check ml-3">
+                                        <label class="form-check-label">
+                                            <input type="checkbox" class="form-check-input sports" value="NBA"> NBA
+                                        </label>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="first-name">First Name:</label>
+                                        <input type="text" class="form-control" id="first-name" name="first-name"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="last-name">Last Name:</label>
+                                        <input type="text" class="form-control" id="last-name" name="last-name"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="age">Age:</label>
+                                        <input type="text" class="form-control" id="age" name="age" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="text" class="form-control" id="email" name="email" required>
+                                    </div>
+
+                                    <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+        </form>
 </body>
+
 </html>
