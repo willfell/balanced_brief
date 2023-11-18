@@ -5,7 +5,8 @@ resource "null_resource" "build_and_deploy" {
 
   provisioner "local-exec" {
     command = <<EOT
-      cd ${path.module}/../../react/app/
+      cd ${path.module}/../../frontend/app/
+      npm install
       npm run build
       cd build
       aws s3 sync . s3://${var.bucket_name}

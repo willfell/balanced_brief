@@ -19,6 +19,7 @@ def add_user(event, context):
 
     # Check if this is a POST request
     if event["httpMethod"] == "POST":
+        print(json.dumps(event))
         # Process the POST request
         # Assuming body is JSON and not None
         requestor = json.loads(event["body"]) if event["body"] else {}

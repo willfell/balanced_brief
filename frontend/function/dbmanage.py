@@ -52,8 +52,8 @@ def add_user_to_db(requestor):
 
     # Extract user data from the requestor object
     email = requestor.get("email").lower()
-    first_name = requestor.get("first_name").title()
-    last_name = requestor.get("last_name").title()
+    first_name = requestor.get("firstName").title()
+    last_name = requestor.get("lastName").title()
     # Assuming interests is a list of strings
     interests = requestor.get("selections", [])
     age = requestor.get("age")

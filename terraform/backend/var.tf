@@ -26,3 +26,11 @@ variable "ssh_key_name" {
 variable "env" {
   default = "PROD"
 }
+
+variable "domain" {
+  default = "balancedbrief.com"
+}
+
+variable "hostname" {
+  default = "balancedbrief.com"
+}
