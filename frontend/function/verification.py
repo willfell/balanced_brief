@@ -13,29 +13,26 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from premailer import transform
 
-region='us-west-1'
+region = "us-west-1"
 client = boto3.client("ses", region_name=region)
 
 
 def send_verification_email(event, context):
-    print(event)    
     requestor = json.loads(event["body"]) if event["body"] else {}
-    print(json.dumps(requestor, indent=4))
-    print(requestor)
-    recipient_email = requestor['email']
+    recipient_email = requestor["email"]
 
-    with open('html/index.html', 'r') as file:
+    with open("html/index.html", "r") as file:
         html_content = file.read()
 
     html_content = html_content.replace("REPLACE_EMAIL_HERE", recipient_email)
     # Create a MIME message
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = "Email Verification - Balanced Brief"
-    msg['From'] = 'verification@balancedbrief.com'  
-    msg['To'] = recipient_email
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = "Email Verification - Balanced Brief"
+    msg["From"] = "verification@balancedbrief.com"
+    msg["To"] = recipient_email
 
     # Attach the HTML content
-    msg.attach(MIMEText(html_content, 'html'))
+    msg.attach(MIMEText(html_content, "html"))
     # with open("html/email-template.css", "r") as f:
     #     css_content = f.read()
 
@@ -44,7 +41,7 @@ def send_verification_email(event, context):
 
     # Inline the CSS
     # base_path = os.path.abspath("html/")
-    #cssutils.log.setLevel(logging.CRITICAL)
+    # cssutils.log.setLevel(logging.CRITICAL)
     # inlined_html = transform(html_with_css, base_url=f"file://{base_path}/")
 
     # Attach the processed HTML with inlined CSS to the email
@@ -65,4 +62,3 @@ def send_verification_email(event, context):
 
     print(response)
     return response
-

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import SignUpPage from './components/LandingPage.js';
-import VerifyUser from './components/VerifyUser.js'; // Import your verification component
+import VerifyUser from './components/VerifyUser.js'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {

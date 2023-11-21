@@ -20,10 +20,10 @@ while IFS="=" read -r key value; do
     echo "Exported: $key"
 done < <(echo "$config" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"')
 
-function stop_instance() {
-    $SLACK progress_message "$ts" "Stopping DB Instance"
-    python3 /app/db/instance_state/stop.py
-}
+# function stop_instance() {
+#     $SLACK progress_message "$ts" "Stopping DB Instance"
+#     python3 /app/db/instance_state/stop.py
+# }
 
 # Initiate Slack Message
 SLACK="bash /app/slack/slack_setup.sh"
@@ -42,7 +42,7 @@ if [ "$EXECUTION_LOCATION" != "LOCAL" ]; then
     if [ $? -ne 0 ]; then
         $SLACK final_message_failure "$ts" "Turning on DB Instance Failed"
         $SLACK final_job_run_failure "$ts"
-        stop_instance
+        #stop_instance
         exit 1
     else
         $SLACK progress_message "$ts" ":white_check_mark: Instance Successfully Started"
@@ -61,12 +61,11 @@ python3 /app/db/migrate.py
 if [ $? -ne 0 ]; then
     $SLACK final_message_failure "$ts" "Migrations Failed"
     $SLACK final_job_run_failure "$ts"
-    stop_instance
+    #stop_instance
     exit 1
     else
         $SLACK progress_message "$ts" ":white_check_mark: Migrations Completed Successfully"
 fi
-exit
 
 echo "======================================================================================"
 echo "======================================================================================"
@@ -98,7 +97,7 @@ if [ $success = true ]; then
 else
     $SLACK final_message_failure "$ts" "Scraping Articles Failed after $max_attempts attempts"
     $SLACK final_job_run_failure "$ts"
-    stop_instance
+    #stop_instance
     exit 1
 fi
 
@@ -113,7 +112,7 @@ python3 /app/newsletter/create_email_template.py
 if [ $? -ne 0 ]; then
     $SLACK final_message_failure "$ts" "Creating Email Templates Failed"
     $SLACK final_job_run_failure "$ts"
-    stop_instance
+    #stop_instance
     exit 1
     else
         $SLACK progress_message "$ts" ":white_check_mark: Email Template Creation and Sending Completed Successfully"
@@ -121,11 +120,11 @@ fi
 
 
 if [ "$EXECUTION_LOCATION" != "LOCAL" ]; then
-    stop_instance
+    #stop_instance
     if [ $? -ne 0 ]; then
         $SLACK final_message_failure "$ts" "Stopping Instance Failed"
         $SLACK final_job_run_failure "$ts"
-        stop_instance
+        #stop_instance
         exit 1
         else
             $SLACK progress_message "$ts" ":white_check_mark: Instance Stopped Successfully"

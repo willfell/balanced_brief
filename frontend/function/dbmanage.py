@@ -2,6 +2,7 @@ import json
 import boto3
 import os
 import psycopg2
+from datetime import datetime
 
 
 # Initialize a session using Amazon Secrets Manager
@@ -54,8 +55,9 @@ def add_user_to_db(requestor):
     email = requestor.get("email").lower()
     first_name = requestor.get("firstName").title()
     last_name = requestor.get("lastName").title()
-    # Assuming interests is a list of strings
-    interests = requestor.get("selections", [])
+    interests = requestor.get("newsSelected", [])
+    print("Here are the interests that are being inserted")
+    print(interests)
     age = requestor.get("age")
     verified = False  # default value, as per your table structure
 
@@ -67,5 +69,25 @@ def add_user_to_db(requestor):
         return True
     except Exception as e:
         print("Error adding user:", e)
+        conn.rollback()  # Rollback in case of error
+        return False
+
+
+def update_user_verification(requestor):
+    query = """UPDATE users 
+               SET verified = %s, verified_at = %s 
+               WHERE email = %s;"""
+
+    # Current timestamp
+    current_timestamp = datetime.now()
+
+    # Execute the query
+    try:
+        cur.execute(query, (True, current_timestamp, requestor.lower()))
+        conn.commit()  # Commit the transaction
+        print("User verified successfully.")
+        return True
+    except Exception as e:
+        print("Error verifying user:", e)
         conn.rollback()  # Rollback in case of error
         return False

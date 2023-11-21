@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import './page.css';
 import bbImage from '../assets/bb.png';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
 
 function VerifyUser() {
     const location = useLocation();
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
-    // Define the verifyUser function inside your component
     const verifyUser = async (email) => {
         if (!email) return;
 
@@ -20,24 +22,22 @@ function VerifyUser() {
         try {
             const response = await fetch(url, requestOptions);
             if (!response.ok) {
-                // Handle response errors
                 throw new Error('Network response was not ok: ' + response.statusText);
             }
             const data = await response.json();
-            // Handle success - you can set state to show a confirmation message, etc.
             console.log('Verification successful:', data);
+            setSuccessMessage('Verification successful!'); // Set success message
+            setErrorMessage(''); // Clear any previous error messages
         } catch (error) {
-            // Handle or log error
             console.error('There was an error verifying the user:', error);
+            setErrorMessage('Error verifying user: ' + error.message); // Set error message
+            setSuccessMessage(''); // Clear any previous success messages
         }
     };
 
     useEffect(() => {
-        // Extract the email parameter from the URL
         const searchParams = new URLSearchParams(location.search);
         const email = searchParams.get('email'); 
-
-        // Call your API to verify the email
         verifyUser(email);
     }, [location]);
 
@@ -46,7 +46,17 @@ function VerifyUser() {
             <div className="sign-up-section">
                 <img src={bbImage} className="small-image" alt="Balanced Brief" />
                 <h1 className="balanced-brief-text">Balanced Brief</h1>
-                {/* Add more content or UI elements as needed */}
+                {/* Display success or error message using Bootstrap alerts */}
+                {successMessage && (
+                    <div className="alert alert-success" role="alert">
+                        {successMessage}
+                    </div>
+                )}
+                {errorMessage && (
+                    <div className="alert alert-danger" role="alert">
+                        {errorMessage}
+                    </div>
+                )}
             </div>
         </div>
     );
