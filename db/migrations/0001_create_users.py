@@ -6,5 +6,5 @@ def up(cur):
                 last_name TEXT NOT NULL,
                 interests TEXT[] NOT NULL,
                 age INTEGER NOT NULL,
-                verified BOOLEAN DEFAULT FALSE);''')
-    
+                verified BOOLEAN DEFAULT FALSE,
+                verified_at TIMESTAMP NULL);''')

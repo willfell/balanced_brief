@@ -8,7 +8,7 @@ import psycopg2
 session = boto3.session.Session()
 client = session.client(service_name="secretsmanager", region_name="us-west-1")
 
-secret_name = "bb/config-local"
+secret_name = "bb/config"
 response = client.get_secret_value(SecretId=secret_name)
 secret_dict = json.loads(response["SecretString"])
 

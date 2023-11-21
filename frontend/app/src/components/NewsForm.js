@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './form.css';
+import './page.css';
 
 function NewsForm({ email: initialEmail }) {
   const [newsChecked, setNewsChecked] = useState(false);
@@ -97,7 +97,8 @@ function NewsForm({ email: initialEmail }) {
     };
   
     // Send POST request
-    fetch('http://127.0.0.1:3000/user/signup', {
+    /* fetch('http://127.0.0.1:3000/user/signup', { */
+    fetch('https://7o7oz1sgn0.execute-api.us-west-1.amazonaws.com/Prod/user/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

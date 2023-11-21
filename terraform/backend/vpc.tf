@@ -102,6 +102,13 @@ resource "aws_security_group" "nat_sg" {
     security_groups = [aws_security_group.allow_ssh.id, aws_security_group.ecs_tasks.id]
   }
 
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [aws_subnet.private_subnet.cidr_block]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -117,3 +124,4 @@ resource "aws_route" "private_subnet_nat_route" {
   destination_cidr_block = "0.0.0.0/0"
   instance_id            = aws_instance.nat_instance.id
 }
+

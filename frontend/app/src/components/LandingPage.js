@@ -68,8 +68,8 @@ function LandingPage() {
         <img src={bbImage} className="small-image" alt="Description" />
         <h1 className="balanced-brief-text">Balanced Brief</h1>
         <p className="lead-top">Sign up free today.</p>
-        <p className="lead-below">Or else.</p>
-        <p className="summary">Welcome to the Balanced Brief, your one stop shot to get the articles YOU want succinctly summarized in 50 words or less. The news you desire without the fluff. All it takes is the time to smoke half a cigarette.</p>
+        {/* <p className="lead-below">Free</p> */}
+        <p className="summary">Sign up today for the news that you want, summarized for you in 50 words or less. </p>
 
         {!showFullForm ? (
           <div className="initial-email-input input-group mb-3">
