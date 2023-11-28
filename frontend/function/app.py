@@ -6,6 +6,7 @@ from swag_functions import *
 
 
 def add_user(event, context):
+    print(event)
     # CORS headers
     headers = {
         "Access-Control-Allow-Origin": "*",

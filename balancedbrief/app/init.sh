@@ -25,30 +25,30 @@ done < <(echo "$config" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"')
 #     python3 /app/db/instance_state/stop.py
 # }
 
-# Initiate Slack Message
+Initiate Slack Message
 SLACK="bash /app/slack/slack_setup.sh"
 ts=$($SLACK init_job_run_message)
 export ts
 
 
-if [ "$EXECUTION_LOCATION" != "LOCAL" ]; then
-    echo "======================================================================================"
-    echo "======================================================================================"
-    echo "Start DB"
-    echo "======================================================================================"
-    echo "======================================================================================"
-    $SLACK progress_message "$ts" "Starting up DB Instance"
-    python3 /app/db/instance_state/start.py
-    if [ $? -ne 0 ]; then
-        $SLACK final_message_failure "$ts" "Turning on DB Instance Failed"
-        $SLACK final_job_run_failure "$ts"
-        #stop_instance
-        exit 1
-    else
-        $SLACK progress_message "$ts" ":white_check_mark: Instance Successfully Started"
-    fi
+# if [ "$EXECUTION_LOCATION" != "LOCAL" ]; then
+#     echo "======================================================================================"
+#     echo "======================================================================================"
+#     echo "Start DB"
+#     echo "======================================================================================"
+#     echo "======================================================================================"
+#     $SLACK progress_message "$ts" "Starting up DB Instance"
+#     python3 /app/db/instance_state/start.py
+#     if [ $? -ne 0 ]; then
+#         $SLACK final_message_failure "$ts" "Turning on DB Instance Failed"
+#         $SLACK final_job_run_failure "$ts"
+#         #stop_instance
+#         exit 1
+#     else
+#         $SLACK progress_message "$ts" ":white_check_mark: Instance Successfully Started"
+#     fi
 
-fi
+# fi
 
 
 echo "======================================================================================"
@@ -107,7 +107,7 @@ echo "==========================================================================
 echo "Creating Email Templates and Sending" 
 echo "======================================================================================"
 echo "======================================================================================"
-$SLACK progress_message "$ts" "Creating email templates and sending"
+#$SLACK progress_message "$ts" "Creating email templates and sending"
 python3 /app/newsletter/create_email_template.py
 if [ $? -ne 0 ]; then
     $SLACK final_message_failure "$ts" "Creating Email Templates Failed"

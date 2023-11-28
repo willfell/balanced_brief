@@ -34,7 +34,7 @@ function LandingPage() {
     if (event.key === 'Enter') {
       handleSubscribeClick();
     }
-  };  
+  };
 
   const handleSubscribeClick = () => {
     if (validateEmail(email)) {
@@ -44,7 +44,7 @@ function LandingPage() {
       alert('Please enter a valid email address.'); // Show pop-up error message
     }
   };
-  
+
   const handleFormSubmit = (event) => {
     console.log("You're in the wrong function")
     event.preventDefault();
@@ -65,7 +65,7 @@ function LandingPage() {
 
     <div className="container landing-page-container">
       <div className="sign-up-section">
-        <img src={bbImage} className="small-image" alt="Description" />
+        <img className="small-image" src="https://balanced-brief-frontend-assets.s3.us-west-1.amazonaws.com/bb.png" alt="Logo" />
         <h1 className="balanced-brief-text">Balanced Brief</h1>
         <p className="lead-top">Sign up free today.</p>
         {/* <p className="lead-below">Free</p> */}
@@ -73,16 +73,17 @@ function LandingPage() {
 
         {!showFullForm ? (
           <div className="initial-email-input input-group mb-3">
-            <input type="email" className="form-control" value={email} onChange={handleEmailChange} placeholder="Enter Email" onKeyDown={handleKeyDown}/>
+            <input type="email" className="form-control" value={email} onChange={handleEmailChange} placeholder="Enter Email" onKeyDown={handleKeyDown} />
             <div className="input-group-append">
               <button className="btn btn-primary" type="button" onClick={handleSubscribeClick}>SUBSCRIBE FOR FREE</button>
             </div>
           </div>
         ) : (
+
           <div className="full-page-form">
-            <img src={bbImage} className="logo" alt="Description" />
-              <div className="close-form" onClick={handleCloseForm}>X</div>
-              <SignUpForm email={email}/>
+            <img className="logo" src="https://balanced-brief-frontend-assets.s3.us-west-1.amazonaws.com/bb.png" alt="Logo" />
+            <div className="close-form" onClick={handleCloseForm}>X</div>
+            <SignUpForm email={email} />
           </div>
         )}
       </div>

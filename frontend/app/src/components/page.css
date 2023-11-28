@@ -1,24 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua&family=Poppins:wght@300&family=Space+Grotesk:wght@300&display=swap');
 
+
 :root {
   --font-family: 'Poppins', sans-serif;
-  --background-coler: #f9f4e8;
-  --green-color: #26a670;
+  --background-color: #f1f2eb;
+  --complimentary-color: #737c77;
+  --complimentary-green-color: #737c77;
   --black-color: #0c2934;
 }
-
-
 
 .indented-checkbox {
   margin-left: 20px;
 }
 
+
+
 .mt-4 {
-  /* Assuming this is your form container class */
-  position: relative;
-  padding: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
+  position: static;
+  padding: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .close-form {
@@ -31,9 +32,8 @@
   font-weight: light;
   padding: 5px;
   border-radius: 50%;
-  background-color: var(--background-coler);
+  background-color: var(--background-color);
   z-index: 1000;
-  /* Added z-index */
 }
 
 @keyframes slideDown {
@@ -64,7 +64,7 @@
 .animated-form {
   animation: slideDown 0.2s ease-out forwards;
   box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.2);
-  background-color: #f8f8f8;
+  background-color: var(--background-color);
 }
 
 .backdrop {
@@ -75,7 +75,6 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
-  /* Ensure it's below the form but above everything else */
 }
 
 .hidden-form {
@@ -85,71 +84,49 @@
 .landing-page-container {
   display: flex;
   justify-content: center;
-  /* Horizontally center */
   align-items: center;
-  /* Vertically center */
   height: 100vh;
   padding: 0;
-  /* Adjust padding as needed */
   text-align: left;
-  /* Overrides center text alignment */
-  background-color: var(--background-coler);
+  background-color: var(--background-color);
   margin-top: -75px;
 }
 
 .sign-up-section {
   flex: 0 0 75%;
-  /* Takes up 75% of the container */
+  background-color: var(--background-color);
   display: flex;
   flex-direction: column;
-  /* Stacks children vertically */
   justify-content: center;
-  /* Center vertically within the section */
   align-items: center;
-  /* Center horizontally within the section */
-  /* Remove padding-right: 0; */
-  /* Remove align-items: flex-start; */
-  /* Remove additional styling for the sign-up section */
 }
 
 .small-image {
   width: 400px;
   height: auto;
   margin-bottom: 10px;
-  /* Adjust the bottom margin to bring the image closer to the text */
-  /* Remove padding and margin */
 }
 
 .balanced-brief-text {
   font-family: var(--font-family);
-  /* Using Bodoni MT font, with a generic serif fallback */
   font-weight: bold;
-  /* Ensures the text is not bold */
   color: var(--black-color);
-  /* A subtle grey color, you can adjust this to the color you prefer */
-  /* Remove position: absolute; */
   margin-top: -70px;
-  /* Adjust the top margin to bring the text closer to the image */
 }
 
 .lead-top {
   padding-top: 20px;
   font-family: var(--font-family);
   font-size: 24px;
-  /* Adjust the size as needed */
   font-weight: bold;
-  /* Change from thin to normal */
   color: var(--black-color);
 }
 
 .lead-below {
   margin-top: 0;
-  /* Remove top margin to reduce space */
   font-family: var(--font-family);
   font-size: 24px;
-  /* Adjust the size as needed */
   font-weight: bold;
-  /* Change from thin to normal */
   color: var(--black-color);
   text-decoration: underline;
 }
@@ -159,87 +136,51 @@
   padding-bottom: 10px;
   padding-right: 50px;
   font-family: var(--font-family);
-  /* Using Bodoni MT font, with a generic serif fallback */
   font-weight: normal;
-  /* Ensures the text is not bold */
   font-size: 16px;
   color: #171717;
-  /* A subtle grey color, you can adjust this to the color you prefer */
   text-align: left;
 }
 
 .btn-primary {
   font-family: var(--font-family);
-  background-color: var(--green-color) !important;
-  /* Sets the background color */
-  border-color: var(--green-color) !important;
-  /* Sets the border color to match */
+  background-color: var(--complimentary-green-color) !important;
+  border-color: var(--complimentary-green-color) !important;
 }
 
 .form-control {
-  border-color: var(--green-color) !important;
-  /* Sets the border color to match */
-  border-width: 4px !important;
-  /* Adjust the thickness as needed */
+  border-color: var(--complimentary-green-color) !important;
+  border-width: 2px !important;
 }
 
 .form-control:focus {
-  border-color: #666600 !important;
-  /* Keeps the new border color on focus */
+  border-color: var(--complimentary-green-color) !important;
   box-shadow: none !important;
-  /* Removes any shadow/glow effect */
-  /* Keep the border color change on focus if needed */
-  border-color: #666600 !important;
+  border-color: var(--complimentary-green-color) !important;
 }
 
 
 .form-control::placeholder {
   color: #1f1e1e;
   font-family: var(--font-family);
-  /* Using Bodoni MT font, with a generic serif fallback */
   font-weight: 100;
-  /* Lighter font weight, 100 is typically the thinnest available */
 
 }
 
 .form-container {
   width: 80%;
-  /* This will set the form container to 80% of its parent element, which is .full-page-form */
   max-width: 960px;
-  /* You can also set a max-width to ensure it doesn't get too wide on larger screens */
-
-  /* Add any additional styling for the form container here */
 }
 
 
 .full-page-form {
-  position: fixed;
-  /* Positions the form relative to the viewport */
-  top: 0;
-  left: 0;
-  width: 100%;
-  /* Full width */
-  height: 100%;
-  /* Full height */
-  background-color: var(--background-coler);
-  z-index: 1500;
-  /* Above everything else */
-  display: flex;
-  /* Use flexbox to center the form */
-  align-items: center;
-  /* Vertical center */
-  justify-content: center;
-  /* Horizontal center */
-  padding: 20px;
-  /* Add some padding around */
-  box-sizing: border-box;
-  /* Ensures padding is included in width/height */
-  overflow-y: auto;
-  /* Allows scrolling if the form content is too long */
-  animation: fadeIn 0.5s ease-out forwards;
   display: grid;
-
-  /* Fade in animation */
+  grid-template-rows: auto 1fr;
+  /* First row for logo, second for content */
+  align-items: start;
+  /* Align items to the start of their grid area */
+  justify-content: center;
+  /* Other styles remain the same */
 }
 
 @keyframes fadeIn {
@@ -253,9 +194,9 @@
 }
 
 /* You may want to hide the scroll bar when the full page form is active */
-body.full-page-form-active {
+/* body.full-page-form-active {
   overflow: hidden;
-}
+} */
 
 .error-message {
   color: red;
@@ -263,132 +204,121 @@ body.full-page-form-active {
   margin-top: 5px;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua&family=Poppins:wght@300&family=Space+Grotesk:wght@300&display=swap');
-:root {
-  --font-family: 'Poppins', sans-serif;
-  --background-coler: #f9f4e8;
-  --green-color: #26a670;
-  --black-color: #0c2934;
-}  
-
-
 .logo {
-  width: 300px;
+  /* Remove negative margins as they might cause overlap */
+  margin-bottom: 0px;
+  /* Adjust as needed */
+  margin-top: 350px;
+  /* Adjust as needed */
+  grid-row: 1;
   height: auto;
-  margin-bottom: -300px;
-  margin-top: -100px;
+  width: 300px;
   display: block;
   margin-left: auto;
   margin-right: auto;
-  /* Additional styles for centering */
 }
 
-.mt-4 { /* Assuming this is your form container class */
-    position: relative;
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    background-color: var(--background-coler);
-    font-family: 'Space Grotesk';
-    border-color: var(--black-color);
-    border-width: 50px;
-  }  
+
+/* .logo {
+    width: 300px;
+    height: auto;
+    margin-bottom: -300px;
+    margin-top: -100px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  } */
 
 .form-check-input news {
-    font-family: var(--font-family) !important;
+  font-family: var(--font-family) !important;
 }
 
-  .btn-primary {
-    font-family: var(--font-family) !important;
-    color: var(--black-color) !important;
-    background-color: var(--green-color) !important;
-    border-color: var(--green-color) !important;
-  }
-    
-  .form-control {
-    border-color: var(--green-color) !important; /* Sets the border color to match */
-    border-width: 1px !important; /* Adjust the thickness as needed */
-  }
-
-.form-control:focus {
-    border-color: var(--green-color) !important; /* Ensures no border appears on focus */
-    box-shadow: none !important; /* Removes any shadow/glow effect */
-    outline: none; /* Optional: Removes the outline that browsers might add on focus */
-    /* Other styles... */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  /* Allows items to wrap to the next line if the container is not wide enough */
+  margin-right: -15px;
+  margin-left: -15px;
+  padding-right: 15px;
+  padding-left: 15px;
 }
-    
-  .form-control::placeholder {
-    color: #1f1e1e; 
-    font-family: 'Space Grotesk'; /* Using Bodoni MT font, with a generic serif fallback */
-    font-weight: 100; /* Lighter font weight, 100 is typically the thinnest available */
-  }
-  
-  .form-container {
-    width: 80%; /* This will set the form container to 80% of its parent element, which is .full-page-form */
-    max-width: 960px; /* You can also set a max-width to ensure it doesn't get too wide on larger screens */
-    /* Add any additional styling for the form container here */
-  }
-  
 
-  .form-row {
-    display: flex;
-    flex-wrap: wrap; /* Allows items to wrap to the next line if the container is not wide enough */
-    margin-right: -15px;
-    margin-left: -15px;
-    padding-right: 15px;
-    padding-left: 15px;
-  }
-  
-  .form-group {
-    padding-right: 15px;
-    padding-left: 15px;
-    flex: 1; /* Ensures that the form group takes up equal space in the container */
-    
-  }
+.category-group {
+  border-bottom: var(--complimentary-green-color);
+  border-bottom: 1px solid var(--complimentary-green-color);
+  padding-bottom: 20px;
+  padding-top: 20px;
+  margin-left: 10px;
+}
 
-  .form-group label {
-    padding-left: 2px;
-  }
-  
+.form-group {
+  padding-right: 15px;
+  padding-left: 30px;
+  flex: 1;
+  /* Ensures that the form group takes up equal space in the container */
+  width: 100%;
+}
+
+.form-group label {
+  padding-left: 2px;
+}
+
+.col-md-6 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
   .col-md-6 {
     flex: 0 0 100%;
     max-width: 100%;
   }
-  
-  /* Responsive behavior */
-  @media (max-width: 768px) {
-    .col-md-6 {
-      flex: 0 0 100%;
-      max-width: 100%;
-    }
-  }
-  
-  .btn-primary {
-    /* display: block; /* Makes the button a block-level element */ 
-    width: 100%; /* Sets the button's width to fill its container */
-    /* Other styles... */
-  }
-  
-  .checkbox-grid {
-    display: grid;
-    /* grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust minmax for your preferred minimum width */
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 10px; /* Adjust the gap size as needed */
-    margin-bottom: 20px;
-  }
-  
-  .form-check label {
-    display: flex;
-    align-items: center; /* Aligns the checkbox and label */
-    font-family: var(--font-family);
-    color: var(--black-color);
-    white-space: nowrap; 
-  }
-  
+}
+
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background-color: #f1f1f1;
+}
+
+.tabs button {
+  padding: 10px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+
+.tabs button.active {
+  border-bottom: 2px solid var(--complimentary-color);
+}
+
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 300px;
+  /* Adjust the gap size as needed */
+  margin-bottom: 20px;
+}
+
+.form-check label {
+  display: flex;
+  align-items: center;
+  /* Aligns the checkbox and label */
+  font-family: var(--font-family);
+  color: var(--black-color);
+  white-space: nowrap;
+}
+
 
 /* Phone shit */
 
 @media only screen and (max-width: 768px) {
+
   .landing-page-container,
   .sign-up-section,
   .form-container {
@@ -397,34 +327,20 @@ body.full-page-form-active {
 
   .small-image,
   .logo {
-    width: 100%; /* full width */
+    width: 100%;
+    /* full width */
     margin-bottom: 20px;
   }
 
-  .mt-4, .form-container {
+  .mt-4,
+  .form-container {
     padding-left: 10px;
     padding-right: 10px;
     position: relative;
+    display: flex;
+
   }
 
-  .col-md-6 {
-    flex-basis: 100%; /* full width */
-    max-width: 100%; /* full width */
-  }
-
-  .checkbox-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  }
-
-  .summary {
-    text-align: center; /* Center the text */
-    padding-right: 10px; /* Adjust padding for smaller screens */
-    padding-left: 10px; /* Adjust padding for smaller screens */
-  }
-}
-
-.indented-checkbox {
-    margin-left: 20px;
 }
 
 #root {
@@ -432,5 +348,5 @@ body.full-page-form-active {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: var(--background-coler)
+  background-color: var(--background-color)
 }
