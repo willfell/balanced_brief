@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #F5F5F5;
+  background-color: #f1f2eb;
 }
 
 .container {
@@ -10,9 +10,19 @@ body {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #F5F5F5;
+  background-color: #f1f2eb;
   border-bottom: 1px solid #eee;
   padding-bottom: 30px;
+}
+
+.logo-image {
+  max-width: 150px;
+  max-height: 150px;
+  width: 100%;
+  height: auto;
+  margin: auto;
+  text-align: center;
+  display: block;
 }
 
 .newsletter-title {
@@ -105,4 +115,11 @@ body {
   font-size: 16px;
   padding: 16px;
   margin: 5px;
+}
+
+
+.button {
+font-family: var(--font-family);
+background-color: var(--complimentary-green-color) !important;
+border-color: var(--complimentary-green-color) !important;
 }

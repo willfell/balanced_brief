@@ -339,7 +339,7 @@ function NewsForm({ email: initialEmail }) {
               </label>
               <div className="form-check ml-3 indented-checkbox">
                 <label className="form-check-label">
-                  <input type="checkbox" className="form-check-input news" value="Economics" checked={economicsChecked} onChange={handleEconomicsChange} /> General News
+                  <input type="checkbox" className="form-check-input news" value="Economics" checked={economicsChecked} onChange={handleEconomicsChange} /> Economics
                 </label>
               </div></div>
 

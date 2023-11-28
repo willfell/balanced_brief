@@ -75,7 +75,7 @@ Resources:
   UserVerificationEmail:
     Type: AWS::Serverless::Function
     Properties:
-      MemorySize: 1024
+      MemorySize: 2048
       Timeout: 10
       CodeUri: ../
       Handler: verification.send_verification_email

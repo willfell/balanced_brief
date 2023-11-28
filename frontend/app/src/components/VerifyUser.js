@@ -37,14 +37,14 @@ function VerifyUser() {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
-        const email = searchParams.get('email'); 
+        const email = searchParams.get('email');
         verifyUser(email);
     }, [location]);
 
     return (
         <div className="container landing-page-container">
             <div className="sign-up-section">
-                <img src={bbImage} className="small-image" alt="Balanced Brief" />
+                <img className="small-image" src="https://balanced-brief-frontend-assets.s3.us-west-1.amazonaws.com/bb.png" alt="Logo" />
                 <h1 className="balanced-brief-text">Balanced Brief</h1>
                 {/* Display success or error message using Bootstrap alerts */}
                 {successMessage && (
