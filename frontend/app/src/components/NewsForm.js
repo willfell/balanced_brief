@@ -297,7 +297,7 @@ function NewsForm({ email: initialEmail }) {
       })
       .then(data => {
         console.log('Success:', data);
-        setSubmitStatus({ isLoading: false, successMessage: 'Email submitted sucessfully. A verification email has been sent.', errorMessage: '' });
+        setSubmitStatus({ isLoading: false, successMessage: 'A verification email has been sent.', errorMessage: '' });
       })
       .catch((error) => {
         console.error('Error:', error);
