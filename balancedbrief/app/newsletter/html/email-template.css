@@ -36,8 +36,8 @@ body {
 }
 
 .newsletter-title {
+  color: #000000;
   font-size: 24px;
-  color: var(--main-font-color);
   text-align: center;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
@@ -46,6 +46,7 @@ body {
 }
 
 .lead {
+  color: #000000;
   font-family: var(--font-family);
   font-weight: lighter;
   font-size: 15px;
@@ -66,12 +67,12 @@ body {
 
 .parent_category h3 {
   background-color: #f1f2eb;
+  color: #000000;
   font-family: var(--font-family);
   font-weight: 400;
   font-size: 20px;
   text-align: left;
   padding: 10px 0;
-  color: var(--secondary-font-color);
   margin: 2px 2px 2px 20px;
 }
 
@@ -93,7 +94,6 @@ body {
 
 .article h4 {
   font-family: var(--font-family);
-  color: var(--secondary-font-color);
   font-size: 10px;
   font-weight: lighter;
   text-align: right;
