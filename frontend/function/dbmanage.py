@@ -48,7 +48,7 @@ def check_for_duplicate_user(requestor):
 
 
 def add_user_to_db(requestor):
-    query = """INSERT INTO users (email, first_name, last_name, interests, age, verified)
+    query = """INSERT INTO users (email, first_name, last_name, interests, date_of_birth, verified)
                VALUES (%s, %s, %s, %s, %s, %s);"""
 
     # Extract user data from the requestor object
@@ -58,12 +58,12 @@ def add_user_to_db(requestor):
     interests = requestor.get("newsSelected", [])
     print("Here are the interests that are being inserted")
     print(interests)
-    age = requestor.get("age")
+    date_of_birth = requestor.get("dateOfBirth")
     verified = False  # default value, as per your table structure
 
     # Execute the query
     try:
-        cur.execute(query, (email, first_name, last_name, interests, age, verified))
+        cur.execute(query, (email, first_name, last_name, interests, date_of_birth, verified))
         conn.commit()  # Commit the transaction
         print("User added successfully.")
         return True

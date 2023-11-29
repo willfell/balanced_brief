@@ -25,7 +25,7 @@ done < <(echo "$config" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"')
 #     python3 /app/db/instance_state/stop.py
 # }
 
-Initiate Slack Message
+# Initiate Slack Message
 SLACK="bash /app/slack/slack_setup.sh"
 ts=$($SLACK init_job_run_message)
 export ts
@@ -66,6 +66,7 @@ if [ $? -ne 0 ]; then
     else
         $SLACK progress_message "$ts" ":white_check_mark: Migrations Completed Successfully"
 fi
+
 
 echo "======================================================================================"
 echo "======================================================================================"

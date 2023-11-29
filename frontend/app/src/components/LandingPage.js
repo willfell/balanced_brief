@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './page.css';
-import bbImage from '../assets/bb.png';
 import SignUpForm from './NewsForm.js'
 
 
