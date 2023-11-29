@@ -203,7 +203,7 @@ def create_and_send_email(user_newsletter, user, current_date):
     if duplicate_send:
         return False
     if os.environ['ENV'] == "TEST":
-        if 'willfellhoelter@gmail.com' not in user["user_email"]:
+        if 'willfellhoelter+test@gmail.com' not in user["user_email"]:
             return False
     msg = MIMEMultipart()
     msg["From"] = "TheBalancedBrief@balancedbrief.com"
@@ -220,13 +220,16 @@ def create_and_send_email(user_newsletter, user, current_date):
     # Combine the HTML and CSS
     html_with_css = f"<style>{css_content}</style>" + html_content
 
+
     # Inline the CSS
     base_path = os.path.abspath("html/")
     cssutils.log.setLevel(logging.CRITICAL)
-    inlined_html = transform(html_with_css, base_url=f"file://{base_path}/")
+    #inlined_html = transform(html_with_css, base_url=f"file://{base_path}/")
+    inlined_html = transform(html_content, base_url=f"file://{base_path}/")
 
     # Attach the processed HTML with inlined CSS to the email
     msg.attach(MIMEText(inlined_html, "html"))
+    print("You made it here")
     response = None
     # Send the email
     try:

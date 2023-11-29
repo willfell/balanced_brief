@@ -88,6 +88,7 @@ def final_message_success(thread_ts):
       # Post a message to the channel and get the "thread_ts" value from the response
       response = client.chat_postMessage(
           channel=SLACK_CHANNEL,
+          text="Execution Successful",
           attachments=[
               {
                   "color": "good",  
@@ -110,6 +111,7 @@ def final_message_failure(thread_ts, message):
       message_text = message + "\n<@U010QGMM078>"
       response = client.chat_postMessage(
           channel=SLACK_CHANNEL,
+          text="Job Failure",
           attachments=[
               {
                   "color": "#FF0000",  
