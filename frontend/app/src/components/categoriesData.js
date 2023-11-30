@@ -10,7 +10,7 @@ export const categoriesData = {
       },
       {
         "name": "Tech News",
-        "subcategories": ["Technology", "Gaming", "PC Gaming", "Programming", "Android", "Apple", "Science", "AI"]
+        "subcategories": ["Technology", "AI", "Futurology", "Android", "Apple", "Science", "Games", "Gaming", "PC Gaming", "Programming"]
       },
       {
         "name": "Catered News",
@@ -18,7 +18,7 @@ export const categoriesData = {
       },
       {
         "name": "Off Beat News",
-        "subcategories": ["Uplifting News", "Oddly Interesting News", "Conspiracy"]
+        "subcategories": ["Off Beat News", "Uplifting News", "Oddly Interesting News", "Conspiracy"]
       },
       {
         "name": "Sports",
@@ -26,7 +26,7 @@ export const categoriesData = {
       },
       {
         "name": "Entertainment",
-        "subcategories": ["Movies", "Television"]
+        "subcategories": ["Movies", "Television", "Books"]
       }
     ]
   };

@@ -145,6 +145,11 @@ else:
             "subreddit_parent_category": "Catered News"
         },
         {
+            "subreddit_name": "RenewableEnergy",
+            "subreddit_category": "Renewable Energy",
+            "subreddit_parent_category": "Catered News"
+        },
+        {
             "subreddit_name": "movies",
             "subreddit_category": "Movies",
             "subreddit_parent_category": "Entertainment"
@@ -152,6 +157,11 @@ else:
         {
             "subreddit_name": "television",
             "subreddit_category": "Television",
+            "subreddit_parent_category": "Entertainment"
+        },
+        {
+            "subreddit_name": "books",
+            "subreddit_category": "Books",
             "subreddit_parent_category": "Entertainment"
         },
         {
@@ -173,6 +183,11 @@ else:
             "subreddit_name": "worldnews",
             "subreddit_category": "World News",
             "subreddit_parent_category": "News"
+        },
+        {
+            "subreddit_name": "offbeat",
+            "subreddit_category": "Off Beat News",
+            "subreddit_parent_category": "Offbeat News"
         },
         {
             "subreddit_name": "UpliftingNews",
@@ -217,6 +232,16 @@ else:
         {
             "subreddit_name": "technology",
             "subreddit_category": "Technology",
+            "subreddit_parent_category": "Tech News"
+        },
+        {
+            "subreddit_name": "Futurology",
+            "subreddit_category": "Futurology",
+            "subreddit_parent_category": "Tech News"
+        },
+        {
+            "subreddit_name": "Games",
+            "subreddit_category": "Games",
             "subreddit_parent_category": "Tech News"
         },
         {
