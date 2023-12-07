@@ -10,7 +10,15 @@ import { categoriesData } from './categoriesData';
 import TextField from '@mui/material/TextField'; // If you want to use Material-UI TextField
 import './page.css';
 import 'bootstrap/dist/css/bootstrap.min.css'; // If installed via npm
+import * as Yup from 'yup';
 
+const validationSchema = Yup.object().shape({
+    firstName: Yup.string().required('First Name is required'),
+    lastName: Yup.string().required('Last Name is required'),
+    dateOfBirth: Yup.date().required('Date of Birth is required'),
+    email: Yup.string().email('Invalid email format').required('Email is required'),
+    // Add any other fields you want to validate here
+});
 
 
 const CategoryForm = ({ email }) => {
@@ -82,8 +90,8 @@ const CategoryForm = ({ email }) => {
     };
 
     return (
-        <Formik initialValues={initialValues} onSubmit={handleSubmit} className="formik-form">
-            {({ values }) => (
+        <Formik initialValues={initialValues} onSubmit={handleSubmit} className="formik-form" validationSchema={validationSchema}>
+            {({ values, errors, touched }) => (
                 <Form>
                     {categoriesData.categories.map(category => (
                         <Accordion key={category.name}>
@@ -104,11 +112,15 @@ const CategoryForm = ({ email }) => {
                     <div className="form-section">
                         <div className="name-fields">
                             <Field as={TextField} name="firstName" label="First Name" className="first-name-field" />
+                            {errors.firstName && touched.firstName && <div className="error">{errors.firstName}</div>}
                             <Field as={TextField} name="lastName" label="Last Name" className="last-name-field" />
+                            {errors.lastName && touched.lastName && <div className="error">{errors.lastName}</div>}
                         </div>
                         <div className="date-email-fields">
                             <Field as={TextField} name="dateOfBirth" type="date" className="date-of-birth-field" />
+                            {errors.dateOfBirth && touched.dateOfBirth && <div className="error">{errors.dateOfBirth}</div>}
                             <Field as={TextField} name="email" label="Email" type="email" className="email-text-box-field" />
+                            {errors.email && touched.email && <div className="error">{errors.email}</div>}
                         </div>
                         <div className="submit-button">
                             <button
