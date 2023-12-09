@@ -21,6 +21,7 @@ phases:
       - echo "The thread TS = $ts"
       - $SLACK progress_message "$ts" "Starting migrations"
       - cd $CODEBUILD_SRC_DIR/db
+      - pip install -r requirements.txt
       - python migrate.py
       - $SLACK progress_message "$ts" "Migrations Complete"
     finally: 

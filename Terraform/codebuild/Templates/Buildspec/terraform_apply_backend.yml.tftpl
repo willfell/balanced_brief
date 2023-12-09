@@ -1,0 +1,66 @@
+version: 0.2
+env:
+  shell: bash
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+      python: 3.10
+    on-failure: ABORT
+    commands:
+      - SLACK="bash $CODEBUILD_SRC_DIR/Terraform/Slack/slack_setup.sh"
+      - $SLACK install_dependencies
+      - |
+          if [ ! -f $CODEBUILD_SRC_DIR_slack_thread_id/ts_value.txt ]; then
+            ts=$($SLACK init_build_message "Validation Testing")
+            echo "ts_value.txt does not exist, ts captured from SLACK command"
+          else
+            ts=$(cat $CODEBUILD_SRC_DIR_slack_thread_id/ts_value.txt)
+            $SLACK init_build_message "Validation Testing"
+            echo "ts_value.txt exists, ts_value read from the file"
+          fi
+      - echo $ts
+      - echo "The thread TS = $ts"
+      - cd /usr/bin
+      - curl -s -qL -o terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+      - unzip -o terraform.zip && rm terraform.zip
+      - chmod +x terraform
+      - curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
+    finally:
+      - |
+        bash -c 'if [ "$CODEBUILD_BUILD_SUCCEEDING" == "0" ]; then $SLACK final_message_failure "$ts" ":skull_and_crossbones: - Install Phase Failed"; fi'
+        bash -c 'if [ "$CODEBUILD_BUILD_SUCCEEDING" == "0" ]; then $SLACK final_pipeline_update_failure "$ts"; fi'
+
+  pre_build:
+    on-failure: ABORT
+    commands:
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+    finally:
+      - |
+        bash -c 'if [ "$CODEBUILD_BUILD_SUCCEEDING" == "0" ]; then $SLACK final_message_failure "$ts" ":skull_and_crossbones: - Docker setup failed"; fi'
+        bash -c 'if [ "$CODEBUILD_BUILD_SUCCEEDING" == "0" ]; then $SLACK final_pipeline_update_failure "$ts"; fi'
+
+  build:
+    on-failure: ABORT
+    commands:
+      - |
+        $SLACK progress_message "$ts" ":factory: Deployment starting"
+      - cd $CODEBUILD_SRC_DIR/Terraform/backend
+      - terraform init -no-color
+      - terraform plan -out=/tmp/tfplan
+      - sleep 5s
+      #- terraform apply "/tmp/tfplan"
+      - |
+        $SLACK progress_message "$ts" ":factory: Deployment complete"
+    finally:
+      - |
+        bash -c 'if [ "$CODEBUILD_BUILD_SUCCEEDING" == "0" ]; then $SLACK final_message_failure "$ts" ":skull_and_crossbones: - Post-build Failed"; fi'
+        bash -c 'if [ "$CODEBUILD_BUILD_SUCCEEDING" == "0" ]; then $SLACK final_pipeline_update_failure "$ts"; fi'
+      - |
+        bash -c 'if [ "$CODEBUILD_BUILD_SUCCEEDING" == "1" ]; then $SLACK final_message_success "$ts" "Terraform Apply Completed"; fi'
+      - |
+        if [ "$BRANCH_NAME" != "development" ] && [ "$CODEBUILD_BUILD_SUCCEEDING" == "1" ]; then
+          bash -c '$SLACK final_pipeline_update_success "$ts"'
+        fi

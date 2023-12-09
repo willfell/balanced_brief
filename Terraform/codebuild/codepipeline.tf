@@ -79,46 +79,28 @@ resource "aws_codepipeline" "pipeline" {
     }
   }
 
+  stage {
+    name = "BackendDeploy"
+
+    action {
+      run_order        = 3
+      name             = "BackendDeploy"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["source", "slack_thread_id"]
+      output_artifacts = []
+      version          = "1"
+
+      configuration = {
+        ProjectName = aws_codebuild_project.backend_deploy.name
+        PrimarySource = "source"  
+      }
+    }
+  }
+
+
+
   tags = merge(var.common_tags, tomap({ "Name" = local.name }))
 }
 
-// Slack Notifications
-# resource "aws_codestarnotifications_notification_rule" "codepipeline" {
-#   count = var.environment_terratest == false ? 1 : 0
-
-#   detail_type = "BASIC"
-#   event_type_ids = [
-#     "codepipeline-pipeline-pipeline-execution-failed",
-#     "codepipeline-pipeline-pipeline-execution-canceled",
-#     "codepipeline-pipeline-pipeline-execution-started",
-#     "codepipeline-pipeline-pipeline-execution-resumed",
-#     "codepipeline-pipeline-pipeline-execution-succeeded",
-#     "codepipeline-pipeline-pipeline-execution-superseded",
-#     "codepipeline-pipeline-manual-approval-failed",
-#     "codepipeline-pipeline-manual-approval-succeeded"
-#   ]
-#   name     = "${local.name}-codepipeline"
-#   resource = aws_codepipeline.pipeline.arn
-
-#   target {
-#     address = "arn:aws:chatbot::${data.aws_caller_identity.current.account_id}:chat-configuration/slack-channel/all-${var.service}-codepipeline"
-#     type    = "AWSChatbotSlack"
-#   }
-# }
-
-# resource "aws_codestarnotifications_notification_rule" "codepipeline_failures_notifications" {
-#   count = var.environment_terratest == false && local.environment == "prod" ? 1 : 0
-
-#   detail_type = "BASIC"
-#   event_type_ids = [
-#     "codepipeline-pipeline-manual-approval-needed",
-#     "codepipeline-pipeline-pipeline-execution-succeeded"
-#   ]
-#   name     = "${local.name}-approvals-failures"
-#   resource = aws_codepipeline.pipeline.arn
-
-#   target {
-#     address = "arn:aws:chatbot::${data.aws_caller_identity.current.account_id}:chat-configuration/slack-channel/all-${var.service}-approvals-failures"
-#     type    = "AWSChatbotSlack"
-#   }
-# }
