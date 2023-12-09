@@ -59,25 +59,25 @@ resource "aws_codepipeline" "pipeline" {
 
 
 
-  # stage {
-  #   name = "DBMigrations"
+  stage {
+    name = "DBMigrations"
 
-  #   action {
-  #     run_order        = 2
-  #     name             = "DBMigrations"
-  #     category         = "Build"
-  #     owner            = "AWS"
-  #     provider         = "CodeBuild"
-  #     input_artifacts  = ["source", "slack_thread_id"]
-  #     output_artifacts = []
-  #     version          = "1"
+    action {
+      run_order        = 2
+      name             = "DBMigrations"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["source", "slack_thread_id"]
+      output_artifacts = []
+      version          = "1"
 
-  #     configuration = {
-  #       ProjectName = aws_codebuild_project.validation.name
-  #       PrimarySource = "source"  
-  #     }
-  #   }
-  # }
+      configuration = {
+        ProjectName = aws_codebuild_project.db_migrations.name
+        PrimarySource = "source"  
+      }
+    }
+  }
 
   tags = merge(var.common_tags, tomap({ "Name" = local.name }))
 }
