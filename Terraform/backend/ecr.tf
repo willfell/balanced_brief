@@ -43,7 +43,7 @@ resource "docker_image" "image" {
   build {
     context    = "${path.cwd}/../.."
     dockerfile = "balancedbrief/app/Dockerfile"
-    platform   = "linux/arm64"
+    platform   = "linux/amd64"
   }
   lifecycle {
     create_before_destroy = true

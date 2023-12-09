@@ -87,8 +87,8 @@ def run_command():
         requiresCompatibilities=[
             "FARGATE",
         ],
-        cpu="512",
-        memory="1024",
+        cpu="1024",
+        memory="2048",
         runtimePlatform = {
             "cpuArchitecture": "X86_64",
             "operatingSystemFamily": "LINUX",
