@@ -21,10 +21,10 @@ resource "aws_ecs_task_definition" "task_def" {
   memory                   = 2048
   task_role_arn            = aws_iam_role.app_task_role.arn
   execution_role_arn       = aws_iam_role.role.arn
-  # runtime_platform {
-  #   operating_system_family = "LINUX"
-  #   cpu_architecture        = "X86_64"
-  # }
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "ARM64"
+  }
   tags = merge(var.tags, { Name = "${var.project_short_name}-ecs-task-definition" })
 }
 
