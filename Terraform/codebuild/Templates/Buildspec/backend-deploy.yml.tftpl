@@ -51,7 +51,7 @@ phases:
       - terraform init -no-color
       - terraform plan -out=/tmp/tfplan
       - sleep 5s
-      #- terraform apply "/tmp/tfplan"
+      - terraform apply "/tmp/tfplan"
       - |
         $SLACK progress_message "$ts" ":factory: Terraform Deployment complete"
       - |

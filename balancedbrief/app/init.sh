@@ -20,51 +20,10 @@ while IFS="=" read -r key value; do
     echo "Exported: $key"
 done < <(echo "$config" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"')
 
-# function stop_instance() {
-#     $SLACK progress_message "$ts" "Stopping DB Instance"
-#     python3 /app/db/instance_state/stop.py
-# }
-
 # Initiate Slack Message
-SLACK="bash /app/Terraform/Slack/slack_setup.sh"
+SLACK="bash /app/slack/slack_setup.sh"
 ts=$($SLACK init_job_run_message)
 export ts
-
-
-# if [ "$EXECUTION_LOCATION" != "LOCAL" ]; then
-#     echo "======================================================================================"
-#     echo "======================================================================================"
-#     echo "Start DB"
-#     echo "======================================================================================"
-#     echo "======================================================================================"
-#     $SLACK progress_message "$ts" "Starting up DB Instance"
-#     python3 /app/db/instance_state/start.py
-#     if [ $? -ne 0 ]; then
-#         $SLACK final_message_failure "$ts" "Turning on DB Instance Failed"
-#         $SLACK final_job_run_failure "$ts"
-#         #stop_instance
-#         exit 1
-#     else
-#         $SLACK progress_message "$ts" ":white_check_mark: Instance Successfully Started"
-#     fi
-
-# fi
-
-echo "======================================================================================"
-echo "======================================================================================"
-echo "Running Migrations"
-echo "======================================================================================"
-echo "======================================================================================"
-$SLACK progress_message "$ts" "Running Migrations"
-python3 /app/db/migrate.py
-if [ $? -ne 0 ]; then
-    $SLACK final_message_failure "$ts" "Migrations Failed"
-    $SLACK final_job_run_failure "$ts"
-    #stop_instance
-    exit 1
-    else
-        $SLACK progress_message "$ts" ":white_check_mark: Migrations Completed Successfully"
-fi
 
 echo "======================================================================================"
 echo "======================================================================================"
@@ -87,7 +46,7 @@ while [ $attempt -lt $max_attempts ]; do
         $SLACK progress_message "$ts" "Scraping Attempt failed"
         attempt=$((attempt+1))
         echo "Attempt $attempt of $max_attempts failed. Retrying..."
-        sleep 5 # Wait for 5 seconds before retrying
+        sleep 5 
     fi
 done
 
@@ -96,7 +55,6 @@ if [ $success = true ]; then
 else
     $SLACK final_message_failure "$ts" "Scraping Articles Failed after $max_attempts attempts"
     $SLACK final_job_run_failure "$ts"
-    #stop_instance
     exit 1
 fi
 
@@ -106,31 +64,14 @@ echo "==========================================================================
 echo "Creating Email Templates and Sending" 
 echo "======================================================================================"
 echo "======================================================================================"
-#$SLACK progress_message "$ts" "Creating email templates and sending"
+$SLACK progress_message "$ts" "Creating email templates and sending"
 python3 /app/newsletter/create_email_template.py
 if [ $? -ne 0 ]; then
     $SLACK final_message_failure "$ts" "Creating Email Templates Failed"
     $SLACK final_job_run_failure "$ts"
-    #stop_instance
     exit 1
     else
         $SLACK progress_message "$ts" ":white_check_mark: Email Template Creation and Sending Completed Successfully"
 fi
 
 
-if [ "$EXECUTION_LOCATION" != "LOCAL" ]; then
-    #stop_instance
-    if [ $? -ne 0 ]; then
-        $SLACK final_message_failure "$ts" "Stopping Instance Failed"
-        $SLACK final_job_run_failure "$ts"
-        #stop_instance
-        exit 1
-        else
-            $SLACK progress_message "$ts" ":white_check_mark: Instance Stopped Successfully"
-            $SLACK final_message_success "$ts" "Job Ran Successfully"
-            $SLACK final_job_run_success "$ts" 
-    fi
-else
-    $SLACK final_message_success "$ts" "Job Ran Successfully"
-    $SLACK final_job_run_success "$ts" 
-fi

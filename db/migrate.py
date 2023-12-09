@@ -5,6 +5,7 @@ import boto3
 import json
 client = boto3.client('secretsmanager')
 secret_name = "bb/config"
+
 response = client.get_secret_value(SecretId=secret_name)
 if 'SecretString' in response:
     secret = response['SecretString']
@@ -12,10 +13,12 @@ else:
     binary_secret_data = response['SecretBinary']
 secret_dict = json.loads(secret)
 
-DB_PASS = secret_dict['POSTGRES_DB_PASS']
-DB_HOST = secret_dict['POSTGRES_DB_HOST']
-# DB_PASS = os.environ['POSTGRES_DB_PASS']
-# DB_HOST = os.environ['POSTGRES_DB_HOST']
+if os.environ['ENV'] == "PROD":
+    DB_PASS = secret_dict['POSTGRES_DB_PASS']
+    DB_HOST = secret_dict['POSTGRES_DB_HOST']
+else:
+    DB_PASS = os.environ['POSTGRES_DB_PASS']
+    DB_HOST = os.environ['POSTGRES_DB_HOST']
 DB_USER = 'db_user'
 DB_NAME = 'postgres'
 DB_PORT = '5432'

@@ -28,24 +28,11 @@ def send_verification_email(event, context):
     # Create a MIME message
     msg = MIMEMultipart("alternative")
     msg["Subject"] = "Email Verification - Balanced Brief"
-    msg["From"] = "verification@balancedbrief.com"
+    msg["From"] = "BalancedBriefVerification@balancedbrief.com"
     msg["To"] = recipient_email
 
     # Attach the HTML content
     msg.attach(MIMEText(html_content, "html"))
-    # with open("html/email-template.css", "r") as f:
-    #     css_content = f.read()
-
-    # Combine the HTML and CSS
-    # html_with_css = f"<style>{css_content}</style>" + html_content
-
-    # Inline the CSS
-    # base_path = os.path.abspath("html/")
-    # cssutils.log.setLevel(logging.CRITICAL)
-    # inlined_html = transform(html_with_css, base_url=f"file://{base_path}/")
-
-    # Attach the processed HTML with inlined CSS to the email
-    # msg.attach(MIMEText(inlined_html, "html"))
     response = None
     # Send the email
     print(f"Attempting to send email to {recipient_email}")
