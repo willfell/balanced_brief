@@ -59,45 +59,41 @@ resource "aws_codepipeline" "pipeline" {
     }
   }
 
-  stage {
-    name = "BackendDeploy"
+stage {
+  name = "FrontAndBackendDeploy"
 
-    action {
-      run_order        = 2
-      name             = "BackendDeploy"
-      category         = "Build"
-      owner            = "AWS"
-      provider         = "CodeBuild"
-      input_artifacts  = ["source", "slack_thread_id"]
-      output_artifacts = []
-      version          = "1"
+  action {
+    run_order        = 1
+    name             = "BackendDeploy"
+    category         = "Build"
+    owner            = "AWS"
+    provider         = "CodeBuild"
+    input_artifacts  = ["source", "slack_thread_id"]
+    output_artifacts = []
+    version          = "1"
 
-      configuration = {
-        ProjectName   = aws_codebuild_project.backend_deploy.name
-        PrimarySource = "source"
-      }
+    configuration = {
+      ProjectName   = aws_codebuild_project.backend_deploy.name
+      PrimarySource = "source"
     }
   }
 
-  stage {
-    name = "FrontendDeploy"
+  action {
+    run_order        = 1
+    name             = "FrontendDeploy"
+    category         = "Build"
+    owner            = "AWS"
+    provider         = "CodeBuild"
+    input_artifacts  = ["source", "slack_thread_id"]
+    output_artifacts = []
+    version          = "1"
 
-    action {
-      run_order        = 3
-      name             = "FrontendDeploy"
-      category         = "Build"
-      owner            = "AWS"
-      provider         = "CodeBuild"
-      input_artifacts  = ["source", "slack_thread_id"]
-      output_artifacts = []
-      version          = "1"
-
-      configuration = {
-        ProjectName   = aws_codebuild_project.frontend_deploy.name
-        PrimarySource = "source"
-      }
+    configuration = {
+      ProjectName   = aws_codebuild_project.frontend_deploy.name
+      PrimarySource = "source"
     }
   }
+}
 
   tags = merge(var.common_tags, tomap({ "Name" = local.name }))
 }
