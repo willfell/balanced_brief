@@ -26,7 +26,7 @@ done < <(echo "$config" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"')
 # }
 
 # Initiate Slack Message
-SLACK="bash /app/slack/slack_setup.sh"
+SLACK="bash /app/Terraform/Slack/slack_setup.sh"
 ts=$($SLACK init_job_run_message)
 export ts
 

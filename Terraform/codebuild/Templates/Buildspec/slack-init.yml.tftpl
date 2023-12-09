@@ -1,0 +1,17 @@
+version: 0.2
+env:
+  shell: bash
+
+phases:
+  install:
+    on-failure: ABORT
+    commands:
+      - SLACK="bash $CODEBUILD_SRC_DIR/Terraform/Slack/slack_setup.sh"
+      - $SLACK install_dependencies
+      - ts=$($SLACK init_pipeline_message)
+      - echo $ts > ts_value.txt
+
+artifacts:
+  files:
+    - ts_value.txt
+  name: slack_thread_id
