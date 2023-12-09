@@ -77,6 +77,11 @@ SUBREDDITS_TO_RETRIEVE = [
         "subreddit_parent_category": "Offbeat News",
     },
     {
+        "subreddit_name": "FloridaMan",
+        "subreddit_category": "Florida Man",
+        "subreddit_parent_category": "Offbeat News",
+    },
+    {
         "subreddit_name": "sports",
         "subreddit_category": "Sports",
         "subreddit_parent_category": "Sports",

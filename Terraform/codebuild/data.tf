@@ -29,7 +29,3 @@ data "aws_vpc" "main" {
 data "aws_s3_bucket" "artifacts_codepipeline" {
   bucket = "balanced-brief-codepipeline"
 }
-
-data "aws_s3_bucket" "cicd_output" {
-  bucket = "balanced-brief-codepipeline-cicd-output"
-}

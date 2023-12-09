@@ -18,7 +18,7 @@ export const categoriesData = {
     },
     {
       "name": "Off Beat News",
-      "subcategories": ["Off Beat News", "Uplifting News", "Oddly Interesting News", "Conspiracy"]
+      "subcategories": ["Off Beat News", "Uplifting News", "Oddly Interesting News", "Conspiracy", "Florida Man"]
     },
     {
       "name": "Sports",

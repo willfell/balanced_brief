@@ -72,6 +72,9 @@ if [ $? -ne 0 ]; then
     exit 1
     else
         $SLACK progress_message "$ts" ":white_check_mark: Email Template Creation and Sending Completed Successfully"
+        $SLACK final_message_success "$ts" "Job Ran Successfully"
+        $SLACK final_job_run_success "$ts" 
+
 fi
 
 

@@ -41,7 +41,6 @@ def gather_articles():
                 )
                 continue
             elif "redd" in post.url:
-                print(f"Post URL has reddit in it with url {post.url}, skipping")
                 continue
             else:
                 post_type = "article"
@@ -54,6 +53,7 @@ def gather_articles():
             # Check to see if you're able to scrape from what you have
             scrapable = is_it_scrapable(post.url, subreddit)
             if not scrapable:
+                submit_unsuccessful_post_to_db(post)
                 continue
 
             category = get_category(subreddit)

@@ -197,7 +197,7 @@ def submit_unsuccessful_post_to_db(post):
     # Execute the INSERT statement
     cur.execute(insert_query, data_tuple)
     conn.commit()
-    print(f"UNSuccessful post for subreddit r/{post['subreddit']}")
+    print(f"Unsuccessful post for subreddit r/{post['subreddit']}")
     print("=================")
     return True
 

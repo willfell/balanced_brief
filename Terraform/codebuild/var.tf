@@ -35,10 +35,6 @@ variable "cidr_public" {
   }
 }
 
-variable "contact" {
-  default = "willfellhoelter@gmail.com"
-}
-
 variable "github_organization" {
   type        = string
   description = "The GitHub account organization"
@@ -55,16 +51,6 @@ variable "service" {
   type        = string
   description = "Used to name resources."
   default     = "BalancedBrief"
-}
-
-variable "slack_channel" {
-  type    = string
-  default = "brief-deploys"
-}
-
-variable "company" {
-  type    = string
-  default = "BalancedBrief"
 }
 
 variable "common_tags" {
