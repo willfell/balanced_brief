@@ -3,7 +3,7 @@
 ################################################################################
 // Locals
 locals {
-  name        = "${var.service}"
+  name = var.service
   slack_integration = {
     SLACK_CHANNEL    = "#brief-deploys"
     SLACK_CHANNEL_ID = "C068YND5RJB"

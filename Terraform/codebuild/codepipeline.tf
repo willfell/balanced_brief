@@ -31,19 +31,20 @@ resource "aws_codepipeline" "pipeline" {
       version          = "1"
 
       configuration = {
-        ConnectionArn    = aws_codestarconnections_connection.codestar.arn
-        FullRepositoryId = "${var.github_organization}/${var.github_repository}"
+        ConnectionArn        = aws_codestarconnections_connection.codestar.arn
+        FullRepositoryId     = "${var.github_organization}/${var.github_repository}"
         BranchName           = "feature/user_sign_up"
         OutputArtifactFormat = "CODEBUILD_CLONE_REF"
       }
     }
   }
+
   stage {
-    name = "SlackInit"
+    name = "DBMigrations"
 
     action {
       run_order        = 1
-      name             = "SlackInit"
+      name             = "DBMigrations"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
@@ -52,29 +53,8 @@ resource "aws_codepipeline" "pipeline" {
       version          = "1"
 
       configuration = {
-        ProjectName = aws_codebuild_project.slack_init.name
-      }
-    }
-  }
-
-
-
-  stage {
-    name = "DBMigrations"
-
-    action {
-      run_order        = 2
-      name             = "DBMigrations"
-      category         = "Build"
-      owner            = "AWS"
-      provider         = "CodeBuild"
-      input_artifacts  = ["source", "slack_thread_id"]
-      output_artifacts = []
-      version          = "1"
-
-      configuration = {
-        ProjectName = aws_codebuild_project.db_migrations.name
-        PrimarySource = "source"  
+        ProjectName   = aws_codebuild_project.db_migrations.name
+        PrimarySource = "source"
       }
     }
   }
@@ -83,7 +63,7 @@ resource "aws_codepipeline" "pipeline" {
     name = "BackendDeploy"
 
     action {
-      run_order        = 3
+      run_order        = 2
       name             = "BackendDeploy"
       category         = "Build"
       owner            = "AWS"
@@ -93,13 +73,31 @@ resource "aws_codepipeline" "pipeline" {
       version          = "1"
 
       configuration = {
-        ProjectName = aws_codebuild_project.backend_deploy.name
-        PrimarySource = "source"  
+        ProjectName   = aws_codebuild_project.backend_deploy.name
+        PrimarySource = "source"
       }
     }
   }
 
+  stage {
+    name = "FrontendDeploy"
 
+    action {
+      run_order        = 3
+      name             = "FrontendDeploy"
+      category         = "Build"
+      owner            = "AWS"
+      provider         = "CodeBuild"
+      input_artifacts  = ["source", "slack_thread_id"]
+      output_artifacts = []
+      version          = "1"
+
+      configuration = {
+        ProjectName   = aws_codebuild_project.frontend_deploy.name
+        PrimarySource = "source"
+      }
+    }
+  }
 
   tags = merge(var.common_tags, tomap({ "Name" = local.name }))
 }
