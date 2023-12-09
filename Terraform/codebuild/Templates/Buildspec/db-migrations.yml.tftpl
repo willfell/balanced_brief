@@ -1,0 +1,34 @@
+version: 0.2
+env:
+  shell: bash
+
+phases:
+  install:
+    on-failure: ABORT
+    commands:
+      - SLACK="bash $CODEBUILD_SRC_DIR/Terraform/Slack/slack_setup.sh"
+      - $SLACK install_dependencies
+      - SLACK="bash $CODEBUILD_SRC_DIR/Terraform/Slack/slack_setup.sh"
+      - $SLACK install_dependencies
+      - ts=$($SLACK init_pipeline_message)
+      - echo $ts > ts_value.txt
+      - echo $ts
+      - echo "The thread TS = $ts"
+      - $SLACK progress_message "$ts" "Starting migrations"
+      - cd $CODEBUILD_SRC_DIR/db
+      - pip install -r requirements.txt
+      - python migrate.py
+      - $SLACK progress_message "$ts" "Migrations Complete"
+    finally: 
+      - |
+        bash -c 'if [ "$CODEBUILD_BUILD_SUCCEEDING" == "0" ]; then $SLACK final_message_failure "$ts" ":skull_and_crossbones: - Migrations failed"; fi'
+        bash -c 'if [ "$CODEBUILD_BUILD_SUCCEEDING" == "0" ]; then $SLACK final_pipeline_update_failure "$ts"; fi'
+      - |
+        if [ "$BRANCH_NAME" != "main" ] && [ "$CODEBUILD_BUILD_SUCCEEDING" == "1" ]; then
+          bash -c '$SLACK final_message_success "$ts" "Migrations Successful"'
+        fi
+        
+artifacts:
+  files:
+    - ts_value.txt
+  name: slack_thread_id

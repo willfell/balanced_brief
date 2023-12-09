@@ -5,5 +5,6 @@ def up(cur):
                 first_name TEXT NOT NULL,
                 last_name TEXT NOT NULL,
                 interests TEXT[] NOT NULL,
-                age INTEGER NOT NULL);''')
-    
+                date_of_birth DATE NOT NULL,
+                verified BOOLEAN DEFAULT FALSE,
+                verified_at TIMESTAMP NULL);''')

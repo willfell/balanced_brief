@@ -1,0 +1,145 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Sign up users
+Globals:
+  Function:
+    Timeout: 5
+
+Resources:
+
+  UserSignUpSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "User Signup Security Group"
+      VpcId: vpc-0a30c0cb14d1ab4cb
+      SecurityGroupEgress:
+        - CidrIp: "0.0.0.0/0"
+          FromPort: 443
+          ToPort: 443
+          IpProtocol: tcp
+        - CidrIp: "0.0.0.0/0"
+          FromPort: 5432
+          ToPort: 5432
+          IpProtocol: tcp
+
+
+  UserSignUp:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../
+      Handler: app.add_user
+      Runtime: python3.9
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - CloudWatchLambdaInsightsExecutionRolePolicy
+      - AWSSecretsManagerGetSecretValuePolicy:
+          SecretArn: arn:aws:secretsmanager:us-west-1:634560051830:secret:bb/config-a8PFCV
+      - Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - lambda:InvokeFunction
+            Resource: !GetAtt UserVerificationEmail.Arn 
+      VpcConfig:
+        SubnetIds: 
+          - subnet-074bd5ec2ceb654dc
+        SecurityGroupIds:
+          - !Ref UserSignUpSecurityGroup
+      Events:
+        SignUpOption:
+          Type: Api
+          Properties:
+            Path: /user/signup
+            Method: options
+        SignUpPost:
+          Type: Api
+          Properties:
+            Path: /user/signup
+            Method: post
+            RestApiId:
+              Ref: ServerlessRestApi
+
+  ServerlessRestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: "Prod"
+      Description: "Used to sign users up"
+      MethodSettings:
+        - ResourcePath: /
+          HttpMethod: post, options, put
+          CachingEnabled: false
+          ThrottlingBurstLimit: 6
+          ThrottlingRateLimit: 6
+
+
+  UserVerificationEmail:
+    Type: AWS::Serverless::Function
+    Properties:
+      MemorySize: 2048
+      Timeout: 10
+      CodeUri: ../
+      Handler: verification.send_verification_email
+      Runtime: python3.9
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - CloudWatchLambdaInsightsExecutionRolePolicy
+      - AWSSecretsManagerGetSecretValuePolicy:
+          SecretArn: arn:aws:secretsmanager:us-west-1:634560051830:secret:bb/config-a8PFCV
+      - Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              # - ses:*
+              - ses:SendEmail
+              - ses:SendTemplatedEmail
+              - ses:SendCustomVerificationEmail
+              - ses:SendRawEmail
+              - ses:SendBulkTemplatedEmail
+              - ses:SendBounce
+              - ses:VerifyDomainDkim
+              - ses:VerifyEmailIdentity
+              - ses:VerifyDomainIdentity
+              - ses:GetIdentityVerificationAttributes
+            Resource: "*"
+
+  UserVerify:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../
+      Handler: verify.verify_user
+      Runtime: python3.9
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - CloudWatchLambdaInsightsExecutionRolePolicy
+      - AWSSecretsManagerGetSecretValuePolicy:
+          SecretArn: arn:aws:secretsmanager:us-west-1:634560051830:secret:bb/config-a8PFCV
+      - Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - lambda:InvokeFunction
+            Resource: !GetAtt UserVerificationEmail.Arn 
+      VpcConfig:
+        SubnetIds: 
+          - subnet-074bd5ec2ceb654dc
+        SecurityGroupIds:
+          - !Ref UserSignUpSecurityGroup
+      Events:
+        SignUpOption:
+          Type: Api
+          Properties:
+            Path: /user/signup/verify
+            Method: options
+        SignUpPost:
+          Type: Api
+          Properties:
+            Path: /user/signup/verify
+            Method: put
+            RestApiId:
+              Ref: ServerlessRestApi
+
+
+Outputs:
+  UserSignUpURL:
+    Description: "API Gateway endpoint URL for Polytomic Webhook"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"

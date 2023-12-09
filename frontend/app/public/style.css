@@ -1,0 +1,15 @@
+:root {
+    --font-family: 'Poppins', sans-serif;
+    --background-coler: #f1f2eb;
+    --green-color: #26a670;
+    --black-color: #0c2934;
+  }  
+
+#root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--background-coler)
+  }
+  

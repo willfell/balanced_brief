@@ -1,0 +1,11 @@
+boto3
+urllib3<2
+psycopg2-binary
+premailer
+openai
+psycopg2-binary
+bs4
+datetime
+cssutils
+argparse
+pytz

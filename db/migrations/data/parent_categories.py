@@ -1,9 +1,11 @@
 PARENT_CATEGORIES = [
-    ("News", 1),
-    ("Finance", 2),
-    ("Tech News", 3),
-    ("Catered News", 4),
-    ("Offbeat News", 5),
-    ("Sports", 6),
-    ("Entertainment", 7)
+    ("US Local News", 1),
+    ("Canada Local News", 2),
+    ("News", 3),
+    ("Finance", 4),
+    ("Tech News", 5),
+    ("Catered News", 6),
+    ("Offbeat News", 7),
+    ("Sports", 8),
+    ("Entertainment", 9)
 ]
