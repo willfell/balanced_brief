@@ -90,7 +90,7 @@ def run_command():
         cpu="1024",
         memory="2048",
         runtimePlatform = {
-            "cpuArchitecture": "ARM64",
+            "cpuArchitecture": "X86_64",
             "operatingSystemFamily": "LINUX",
         },
         tags=[
