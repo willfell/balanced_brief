@@ -33,18 +33,18 @@ resource "aws_codepipeline" "pipeline" {
       configuration = {
         ConnectionArn        = aws_codestarconnections_connection.codestar.arn
         FullRepositoryId     = "${var.github_organization}/${var.github_repository}"
-        BranchName           = "feature/user_sign_up"
+        BranchName           = "pipeline/standardize"
         OutputArtifactFormat = "CODEBUILD_CLONE_REF"
       }
     }
   }
 
   stage {
-    name = "DBMigrations"
+    name = "BackendDeploy"
 
     action {
       run_order        = 1
-      name             = "DBMigrations"
+      name             = "BackendDeploy"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
@@ -53,30 +53,14 @@ resource "aws_codepipeline" "pipeline" {
       version          = "1"
 
       configuration = {
-        ProjectName   = aws_codebuild_project.db_migrations.name
+        ProjectName   = aws_codebuild_project.backend_deploy.name
         PrimarySource = "source"
       }
     }
   }
 
 stage {
-  name = "FrontAndBackendDeploy"
-
-  action {
-    run_order        = 1
-    name             = "BackendDeploy"
-    category         = "Build"
-    owner            = "AWS"
-    provider         = "CodeBuild"
-    input_artifacts  = ["source", "slack_thread_id"]
-    output_artifacts = []
-    version          = "1"
-
-    configuration = {
-      ProjectName   = aws_codebuild_project.backend_deploy.name
-      PrimarySource = "source"
-    }
-  }
+  name = "Frontend"
 
   action {
     run_order        = 1
