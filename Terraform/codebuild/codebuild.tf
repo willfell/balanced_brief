@@ -35,6 +35,7 @@ resource "aws_codebuild_project" "backend_deploy" {
         AWS_ACCOUNT             = data.aws_caller_identity.current.account_id
         CODE_BUILD_PROJECT_NAME = "${local.name}-backend-deploy"
         AWS_REGION              = data.aws_region.current.name
+        ENV                     = "PROD"
       }
 
       content {
