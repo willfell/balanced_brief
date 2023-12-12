@@ -33,7 +33,7 @@ resource "aws_codepipeline" "pipeline" {
       configuration = {
         ConnectionArn        = aws_codestarconnections_connection.codestar.arn
         FullRepositoryId     = "${var.github_organization}/${var.github_repository}"
-        BranchName           = "pipeline/standardize"
+        BranchName           = "main"
         OutputArtifactFormat = "CODEBUILD_CLONE_REF"
       }
     }
