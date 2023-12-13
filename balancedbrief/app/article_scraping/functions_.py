@@ -212,7 +212,7 @@ def submit_successful_post_to_db(post):
         post["post_score"],
         post["post_url"],
         post["post_type"],
-        post["post_content"],
+        post["post_content"].replace('\x00', ''),
         post["post_summary"],
         post["post_title_summary"],
         post["post_image_url"],
@@ -223,24 +223,6 @@ def submit_successful_post_to_db(post):
         post["article_publish_date"],
         post["article_source_url"],
     )
-
-    print(post["reddit_posts_id"])
-    print(post["post_id"])
-    print(post["subreddit"])
-    print(post["post_title"])
-    print(post["post_score"])
-    print(post["post_url"])
-    print(post["post_type"])
-    print(post["post_content"])
-    print(post["post_summary"])
-    print(post["post_title_summary"])
-    print(post["post_image_url"])
-    print(post["post_category"])
-    print(post["post_parent_category"])
-    print(post["article_title"])
-    print(post["article_authors"])
-    print(post["article_publish_date"])
-    print(post["article_source_url"])
 
     # Define the INSERT statement
     insert_query = """
