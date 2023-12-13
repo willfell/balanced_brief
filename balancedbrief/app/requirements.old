@@ -1,0 +1,12 @@
+openai==1.2.2
+psycopg2-binary
+bs4
+newspaper3k
+datetime
+praw
+premailer
+boto3
+cssutils
+slack_sdk
+argparse
+pytz

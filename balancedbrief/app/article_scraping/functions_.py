@@ -212,7 +212,7 @@ def submit_successful_post_to_db(post):
         post["post_score"],
         post["post_url"],
         post["post_type"],
-        post["post_content"],
+        post["post_content"].replace('\x00', ''),
         post["post_summary"],
         post["post_title_summary"],
         post["post_image_url"],
