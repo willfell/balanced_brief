@@ -33,7 +33,7 @@ resource "aws_codepipeline" "pipeline" {
       configuration = {
         ConnectionArn        = aws_codestarconnections_connection.codestar.arn
         FullRepositoryId     = "${var.github_organization}/${var.github_repository}"
-        BranchName           = "fix/submit_to_db"
+        BranchName           = "main"
         OutputArtifactFormat = "CODEBUILD_CLONE_REF"
       }
     }
