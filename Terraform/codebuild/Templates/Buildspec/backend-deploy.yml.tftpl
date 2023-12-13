@@ -71,3 +71,8 @@ phases:
         if [ "$BRANCH_NAME" != "development" ] && [ "$CODEBUILD_BUILD_SUCCEEDING" == "1" ]; then
           bash -c '$SLACK final_pipeline_update_success "$ts"'
         fi
+
+artifacts:
+  files:
+    - ts_value.txt
+  name: slack_thread_id
