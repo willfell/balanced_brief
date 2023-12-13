@@ -224,6 +224,8 @@ def submit_successful_post_to_db(post):
         post["article_source_url"],
     )
 
+    print(f"Submitting successful post to DB with\n{json.dumps(post, indent=4)}")
+
     # Define the INSERT statement
     insert_query = """
         INSERT INTO successful_posts (
