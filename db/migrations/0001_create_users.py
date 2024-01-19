@@ -7,4 +7,6 @@ def up(cur):
                 interests TEXT[] NOT NULL,
                 date_of_birth DATE NOT NULL,
                 verified BOOLEAN DEFAULT FALSE,
-                verified_at TIMESTAMP NULL);''')
+                verified_at TIMESTAMP NULL,
+                unsubscribed BOOLEAN default false,
+                unsubscribed_at TIMESTAMP NULL);''')

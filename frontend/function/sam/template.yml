@@ -3,7 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: Sign up users
 Globals:
   Function:
-    Timeout: 5
+    Timeout: 30
 
 Resources:
 
@@ -138,6 +138,35 @@ Resources:
             RestApiId:
               Ref: ServerlessRestApi
 
+  UserUnsubscribe:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../
+      Handler: unsubscribe.unsubscribe_user
+      Runtime: python3.9
+      Policies:
+      - AWSLambdaBasicExecutionRole
+      - CloudWatchLambdaInsightsExecutionRolePolicy
+      - AWSSecretsManagerGetSecretValuePolicy:
+          SecretArn: arn:aws:secretsmanager:us-west-1:634560051830:secret:bb/config-a8PFCV
+      VpcConfig:
+        SubnetIds: 
+          - subnet-074bd5ec2ceb654dc
+        SecurityGroupIds:
+          - !Ref UserSignUpSecurityGroup
+      Events:
+        SignUpOption:
+          Type: Api
+          Properties:
+            Path: /user/unsubscribe
+            Method: options
+        SignUpPost:
+          Type: Api
+          Properties:
+            Path: /user/unsubscribe
+            Method: delete
+            RestApiId:
+              Ref: ServerlessRestApi
 
 Outputs:
   UserSignUpURL:

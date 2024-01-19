@@ -25,6 +25,25 @@ SLACK="bash /app/slack/slack_setup.sh"
 ts=$($SLACK init_job_run_message)
 export ts
 
+
+if [ "$EXECUTION_LOCATION" == "LOCAL" ]; then
+    echo "======================================================================================"
+    echo "======================================================================================"
+    echo "Running Migrations"
+    echo "======================================================================================"
+    echo "======================================================================================"
+    $SLACK progress_message "$ts" "Running Migrations"
+    python3 /app/db/migrate.py
+    if [ $? -ne 0 ]; then
+        $SLACK final_message_failure "$ts" "Migrations Failed"
+        $SLACK final_job_run_failure "$ts"
+        stop_instance
+        exit 1
+        else
+            $SLACK progress_message "$ts" ":white_check_mark: Migrations Completed Successfully"
+    fi
+fi
+
 echo "======================================================================================"
 echo "======================================================================================"
 echo "Running Article Scraping" 
