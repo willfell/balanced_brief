@@ -9,3 +9,11 @@ resource "aws_route53_record" "db_private" {
   ttl     = "300"
   records = [aws_instance.db.private_ip]
 }
+
+resource "aws_route53_record" "rds_db_private" {
+  zone_id = data.aws_route53_zone.zone.id
+  name    = "rds-db.${var.hostname}"
+  type    = "CNAME"
+  ttl     = "300"
+  records = [aws_rds_cluster_instance.bb_rds.endpoint]
+}

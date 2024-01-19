@@ -25,7 +25,7 @@ conn_params = {
     "host": db_host,
     "port": "5432",
     "database": "postgres",
-    "user": "db_user",
+    "user": "postgres",
     "password": db_pass,
 }
 

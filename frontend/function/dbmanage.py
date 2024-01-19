@@ -17,7 +17,7 @@ secret_dict = json.loads(response["SecretString"])
 
 DB_PASS = secret_dict["POSTGRES_DB_PASS"]
 DB_HOST = secret_dict["POSTGRES_DB_HOST"]
-DB_USER = "db_user"
+DB_USER = "postgres"
 DB_NAME = "postgres"
 DB_PORT = "5432"
 
