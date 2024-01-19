@@ -2,6 +2,7 @@ import json
 import boto3
 import os
 import psycopg2
+from psycopg2 import OperationalError
 from datetime import datetime
 
 
@@ -14,18 +15,26 @@ response = client.get_secret_value(SecretId=secret_name)
 secret_dict = json.loads(response["SecretString"])
 
 
-# print(secret_dict)
 DB_PASS = secret_dict["POSTGRES_DB_PASS"]
 DB_HOST = secret_dict["POSTGRES_DB_HOST"]
-DB_USER = "db_user"
+DB_USER = "postgres"
 DB_NAME = "postgres"
 DB_PORT = "5432"
 
 
 def connect_to_db():
-    return psycopg2.connect(
-        host=DB_HOST, port=DB_PORT, database=DB_NAME, user=DB_USER, password=DB_PASS
-    )
+    try:
+        return psycopg2.connect(
+            host=DB_HOST,
+            port=DB_PORT,
+            database=DB_NAME,
+            user=DB_USER,
+            password=DB_PASS,
+            connect_timeout=10  # Timeout in seconds
+        )
+    except OperationalError as e:
+        print(f"Failed to connect to DB: {e}")
+        return None
 
 
 print("Connecting to DB")
@@ -91,3 +100,35 @@ def update_user_verification(requestor):
         print("Error verifying user:", e)
         conn.rollback()  # Rollback in case of error
         return False
+
+def check_user_and_unsubscribe(email):
+    try:
+        with conn.cursor() as cur:
+            # Check if user exists
+            cur.execute("SELECT unsubscribed FROM users WHERE email = %s", (email,))
+            result = cur.fetchone()
+
+            if result is None:
+                # User does not exist
+                return False, {"status": "error", "message": f"{email} does not exist"}
+
+            is_unsubscribed = result[0]
+            if is_unsubscribed:
+                # User already unsubscribed
+                return False, {"status": "error", "message": f"{email} already unsubscribed"}
+
+            # Unsubscribe the user
+            cur.execute("UPDATE users SET unsubscribed = TRUE, unsubscribed_at = %s WHERE email = %s", (datetime.now(), email))
+            conn.commit()
+
+            return True, {"status": "success", "message": "User successfully unsubscribed"}
+
+    except psycopg2.Error as e:
+        # Handle database errors
+        print("Database error:", e)
+        return False, {"status": "error", "message": "Database error"}
+
+    finally:
+        conn.close()
+
+

@@ -99,7 +99,7 @@ resource "aws_security_group" "nat_sg" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [aws_security_group.allow_ssh.id, aws_security_group.ecs_tasks.id]
+    security_groups = [aws_security_group.allow_ssh.id, aws_security_group.ecs_tasks.id, aws_security_group.rds.id]
   }
 
   ingress {

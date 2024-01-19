@@ -19,7 +19,7 @@ if os.environ['ENV'] == "PROD":
 else:
     DB_PASS = os.environ['POSTGRES_DB_PASS']
     DB_HOST = os.environ['POSTGRES_DB_HOST']
-DB_USER = 'db_user'
+DB_USER = 'postgres'
 DB_NAME = 'postgres'
 DB_PORT = '5432'
 

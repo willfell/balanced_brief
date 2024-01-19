@@ -14,7 +14,7 @@ services:
     container_name: postgres_container
     image: postgres
     environment:
-      POSTGRES_USER: db_user
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${DB_PASS}  # Replace with actual password or fetch securely.
       PGDATA: /data/postgres
     volumes:

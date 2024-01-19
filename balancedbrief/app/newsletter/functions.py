@@ -25,7 +25,7 @@ conn_params = {
     "host": db_host,
     "port": "5432",
     "database": "postgres",
-    "user": "db_user",
+    "user": "postgres",
     "password": db_pass,
 }
 
@@ -38,10 +38,10 @@ def obtain_user_list():
     # Filter users based on the environment
     if os.environ["ENV"] == "TEST":
         cur.execute(
-            "SELECT id, email, first_name, last_name, interests FROM users WHERE email LIKE 'willfellhoelter%';"
+            "SELECT id, email, first_name, last_name, interests FROM users WHERE email LIKE 'willfellhoelter%' AND verified is TRUE and unsubscribed is FALSE;"
         )
     else:
-        cur.execute("SELECT id, email, first_name, last_name, interests FROM users;")
+        cur.execute("SELECT id, email, first_name, last_name, interests FROM users WHERE verified is TRUE and unsubscribed is FALSE;")
 
     results = cur.fetchall()
 
@@ -156,6 +156,8 @@ def generate_newsletter(article_list, category_order_mapping, user, current_date
     with open("newsletter/html/index.html", "r") as file:
         html_template = file.read()
 
+    html_template = html_template.replace("REPLACE_EMAIL_HERE", user['user_email'])
+
     soup = BeautifulSoup(html_template, "html.parser")
 
     # Start by finding the leadoff div which is the starting point for insertions
@@ -179,6 +181,7 @@ def generate_newsletter(article_list, category_order_mapping, user, current_date
                     article_soup = BeautifulSoup(formatted_article, "html.parser").div
                     insert_point.insert_after(article_soup)
                     insert_point = article_soup
+
 
     with open(filename, "w") as output_file:
         output_file.write(str(soup))
@@ -230,7 +233,6 @@ def create_and_send_email(user_newsletter, user, current_date):
 
     # Attach the processed HTML with inlined CSS to the email
     msg.attach(MIMEText(inlined_html, "html"))
-    print("You made it here")
     response = None
     # Send the email
     try:

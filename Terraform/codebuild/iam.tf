@@ -142,7 +142,8 @@ resource "aws_iam_role_policy" "codebuild_role_policy" {
           "codepipeline:*",
           "cognito-idp:*",
           "acm:*",
-          "sagemaker:*"
+          "sagemaker:*",
+          "apigateway:*"
         ]
         Effect   = "Allow"
         Resource = "*"
