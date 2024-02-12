@@ -15,5 +15,5 @@ resource "aws_route53_record" "rds_db_private" {
   name    = "rds-db.${var.hostname}"
   type    = "CNAME"
   ttl     = "300"
-  records = [aws_rds_cluster_instance.bb_rds.endpoint]
+  records = [aws_db_instance.bb_rds.address]
 }
