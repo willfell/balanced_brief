@@ -1,0 +1,74 @@
+# docker-compose.yml
+version: "3.8"
+
+services:
+  postgres:
+    container_name: bb_postgres
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: db_pass
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - bb-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  migrations:
+    container_name: bb_migrations
+    build:
+      context: .
+      dockerfile: balancedbrief/app/Dockerfile
+    environment:
+      ENV: LOCAL
+      POSTGRES_DB_HOST: postgres
+      POSTGRES_DB_PASS: db_pass
+      EXECUTION_LOCATION: LOCAL
+    volumes:
+      - ./balancedbrief/app:/app
+      - ./db:/app/db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "python /app/db/migrate.py --seed"
+    networks:
+      - bb-network
+
+  app:
+    container_name: bb_app
+    build:
+      context: .
+      dockerfile: balancedbrief/app/Dockerfile
+    environment:
+      ENV: LOCAL
+      POSTGRES_DB_HOST: postgres
+      POSTGRES_DB_PASS: db_pass
+      REDDITCLIENTID: ${REDDITCLIENTID}
+      REDDITCLIENTSECRET: ${REDDITCLIENTSECRET}
+      REDDITAGENT: ${REDDITAGENT}
+      OPENAI_KEY: ${OPENAI_KEY}
+      EXECUTION_LOCATION: LOCAL
+    volumes:
+      - ./balancedbrief/app:/app
+      - ./db:/app/db
+      - ./slack:/app/slack
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+    networks:
+      - bb-network
+
+networks:
+  bb-network:
+    driver: bridge
+
+volumes:
+  postgres:

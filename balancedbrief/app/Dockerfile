@@ -8,14 +8,13 @@ WORKDIR /app
 COPY balancedbrief/app/requirements.txt .
 
 # Install the Python dependencies
-RUN pip3 install -r requirements.txt && apk add --no-cache --upgrade bash && apk add --no-cache aws-cli jq curl
+RUN pip3 install -r requirements.txt && \
+    apk add --no-cache --upgrade bash && \
+    apk add --no-cache aws-cli jq curl postgresql-dev
 
 # Now, copy everything else
 COPY balancedbrief/app .
-
 COPY db /app/db
-
 COPY slack /app/slack
 
 CMD ["sh", "init.sh"]
-

@@ -1,73 +1,93 @@
-import psycopg2
-import importlib
+# db/migrate.py
 import os
+import sys
+import logging
+import argparse
 import boto3
 import json
-client = boto3.client('secretsmanager')
-secret_name = "bb/config"
+from alembic import command
+from alembic.config import Config
 
-response = client.get_secret_value(SecretId=secret_name)
-if 'SecretString' in response:
-    secret = response['SecretString']
-else:
-    binary_secret_data = response['SecretBinary']
-secret_dict = json.loads(secret)
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-if os.environ['ENV'] == "PROD":
-    DB_PASS = secret_dict['POSTGRES_DB_PASS']
-    DB_HOST = secret_dict['POSTGRES_DB_HOST']
-else:
-    DB_PASS = os.environ['POSTGRES_DB_PASS']
-    DB_HOST = os.environ['POSTGRES_DB_HOST']
-DB_USER = 'postgres'
-DB_NAME = 'postgres'
-DB_PORT = '5432'
+def get_db_credentials():
+    """Get database credentials from AWS Secrets Manager or environment variables."""
+    client = boto3.client('secretsmanager')
+    secret_name = "bb/config"
 
-def connect_to_db():
-    return psycopg2.connect(host=DB_HOST, port=DB_PORT, database=DB_NAME, user=DB_USER, password=DB_PASS)
+    try:
+        response = client.get_secret_value(SecretId=secret_name)
+        if 'SecretString' in response:
+            secret = response['SecretString']
+        else:
+            secret = response['SecretBinary']
+        secret_dict = json.loads(secret)
 
-def create_migration_table_if_not_exists(cur):
-    cur.execute('''CREATE TABLE IF NOT EXISTS migrations (version INTEGER PRIMARY KEY);''')
+        if os.environ['ENV'] == "PROD":
+            DB_PASS = secret_dict['POSTGRES_DB_PASS']
+            DB_HOST = secret_dict['POSTGRES_DB_HOST']
+        else:
+            DB_PASS = os.environ['POSTGRES_DB_PASS']
+            DB_HOST = os.environ['POSTGRES_DB_HOST']
+        
+        return {
+            'user': 'postgres',
+            'password': DB_PASS,
+            'host': DB_HOST,
+            'port': '5432',
+            'database': 'postgres'
+        }
+    except Exception as e:
+        logger.error(f"Error getting database credentials: {e}")
+        raise
 
-def get_applied_migrations(cur):
-    cur.execute('''SELECT version FROM migrations ORDER BY version ASC;''')
-    return {row[0] for row in cur.fetchall()}
+def run_migrations():
+    """Run all pending Alembic migrations."""
+    try:
+        # Add parent directory to Python path to find the Alembic config
+        parent_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'balancedbrief', 'app')
+        sys.path.insert(0, parent_dir)
+        
+        # Get the Alembic config file path
+        alembic_dir = os.path.join(parent_dir, 'db')
+        alembic_ini = os.path.join(alembic_dir, 'alembic.ini')
+        
+        if not os.path.exists(alembic_ini):
+            logger.error(f"Alembic config file not found at {alembic_ini}")
+            return False
+        
+        # Create an Alembic configuration object
+        alembic_cfg = Config(alembic_ini)
+        
+        # Run the migrations
+        logger.info("Running database migrations...")
+        command.upgrade(alembic_cfg, "head")
+        
+        logger.info("Migrations completed successfully")
+        return True
+    except Exception as e:
+        logger.error(f"Error running migrations: {e}")
+        return False
+
+def seed_data():
+    """Seed initial data into the database if needed."""
+    # This function could be used to insert initial data after migrations
+    # such as parent categories, subreddits, etc.
+    pass
 
 def main():
-    conn = connect_to_db()
-    cur = conn.cursor()
-
-    create_migration_table_if_not_exists(cur)
-
-    applied_versions = get_applied_migrations(cur)
-    migrations_to_apply = set(range(1, 10001))  # Assuming a max of 1000 migrations for this example
-
-
-
-    for version in sorted(migrations_to_apply - applied_versions):
-        
-        migration_map = {
-            1: "create_users",
-            2: "insert_users",
-            3: "create_subreddits_table",
-            4: "insert_subreddits",
-            5: "parent_category_table",
-            6: "insert_parent_categories",
-            7: "create_posts_tables",
-            8: "create_email_send_log_tables"
-        }
-
-        if version in migration_map:
-            print("===================================")
-            migration_name = migration_map[version]
-            print(f"Migration Name = {migration_name}")
-            migration = importlib.import_module(f"migrations.{str(version).zfill(4)}_{migration_name}")
-            migration.up(cur)
-            cur.execute("INSERT INTO migrations (version) VALUES (%s);", (version,))
-        conn.commit()
-    print("Migrations Complete")
-    print("===============================")
-
+    parser = argparse.ArgumentParser(description='Run database migrations using Alembic')
+    parser.add_argument('--seed', action='store_true', help='Seed initial data after migrations')
+    args = parser.parse_args()
+    
+    if run_migrations():
+        if args.seed:
+            seed_data()
+        return 0
+    else:
+        return 1
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

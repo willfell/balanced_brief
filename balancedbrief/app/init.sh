@@ -25,8 +25,8 @@ SLACK="bash /app/slack/slack_setup.sh"
 ts=$($SLACK init_job_run_message)
 export ts
 
-
-if [ "$EXECUTION_LOCATION" == "LOCAL" ]; then
+# In local mode, migrations are handled by a separate container
+if [ "$EXECUTION_LOCATION" != "LOCAL" ]; then
     echo "======================================================================================"
     echo "======================================================================================"
     echo "Running Migrations"
@@ -37,10 +37,9 @@ if [ "$EXECUTION_LOCATION" == "LOCAL" ]; then
     if [ $? -ne 0 ]; then
         $SLACK final_message_failure "$ts" "Migrations Failed"
         $SLACK final_job_run_failure "$ts"
-        stop_instance
         exit 1
-        else
-            $SLACK progress_message "$ts" ":white_check_mark: Migrations Completed Successfully"
+    else
+        $SLACK progress_message "$ts" ":white_check_mark: Migrations Completed Successfully"
     fi
 fi
 
@@ -93,7 +92,4 @@ if [ $? -ne 0 ]; then
         $SLACK progress_message "$ts" ":white_check_mark: Email Template Creation and Sending Completed Successfully"
         $SLACK final_message_success "$ts" "Job Ran Successfully"
         $SLACK final_job_run_success "$ts" 
-
 fi
-
-
